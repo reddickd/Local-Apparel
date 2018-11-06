@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "838103395402-ugulea75388a7u1nqb17d71o1la17o4t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cmsc436.localapparel",
+            "certificate_hash": "a643158fb76dc9b4ccbe66ba0afbcd976041bb37"
+          }
+        },
+        {
           "client_id": "838103395402-1slq7pfj8r1oj9far8qmc16lqq6f9egd.apps.googleusercontent.com",
           "client_type": 3
         }
