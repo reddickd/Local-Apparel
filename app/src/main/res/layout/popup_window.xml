@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:background="#A9A9A9">
+
+
+        <EditText
+            android:id="@+id/itemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/popupName"
+            android:ems="10"
+            android:hint="Item Name"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/popupName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+
+            android:text="Item To List" />
+
+        <Button
+            android:id="@+id/submitItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/itemName"
+            android:layout_centerHorizontal="true"
+            android:text="Submit"
+            android:textSize="15sp" />
+
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
