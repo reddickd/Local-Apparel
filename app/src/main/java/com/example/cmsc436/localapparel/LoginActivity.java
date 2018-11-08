@@ -1,10 +1,12 @@
 package com.example.cmsc436.localapparel;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         emailField = findViewById(R.id.emailField);
         passwordField = findViewById(R.id.passwordField);
+
     }
 
     public void logInPressed(View view) {
@@ -44,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                     //Get current user information
                     FirebaseUser user = mAuth.getCurrentUser();
                     //go to next activty
-                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, MainPage.class));
                 }else{
                     //Sign in failed
                     Log.w(TAG, "Sign in failed");
