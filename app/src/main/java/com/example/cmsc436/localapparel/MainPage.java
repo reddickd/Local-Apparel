@@ -1,5 +1,7 @@
 package com.example.cmsc436.localapparel;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,8 @@ public class MainPage extends AppCompatActivity{
     FirebaseDatabase fire;
     FireBaseBackEnd backEnd;
     Button sendMessageButton, listItemButton;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
 
 
     @Override
@@ -34,6 +38,8 @@ public class MainPage extends AppCompatActivity{
         //parent firebase database reference
         fire = FirebaseDatabase.getInstance("https://localapparel-96283.firebaseio.com/");
         backEnd = new FireBaseBackEnd(fire);
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
         sendMessageButton = (Button) findViewById(R.id.send_message);
         listItemButton = (Button) findViewById(R.id.list_item);
