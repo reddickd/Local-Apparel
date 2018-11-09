@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateUserActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/emailFieldCreateUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/emailField"
+            android:inputType="textEmailAddress"
+            tools:layout_editor_absoluteX="70dp"
+            tools:layout_editor_absoluteY="162dp" />
+
+        <EditText
+            android:id="@+id/passwordFieldCreateUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/passwordField"
+            android:inputType="textPassword"
+            tools:layout_editor_absoluteX="70dp"
+            tools:layout_editor_absoluteY="232dp" />
+
+        <EditText
+            android:id="@+id/verifyPasswordFieldCreateUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/verifyPasswordField"
+            android:inputType="textPassword"
+            tools:layout_editor_absoluteX="70dp"
+            tools:layout_editor_absoluteY="232dp" />
+        <Button
+            android:id="@+id/loginButtonCreateUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            tools:layout_editor_absoluteX="136dp"
+            tools:layout_editor_absoluteY="313dp"
+            android:onClick="createUserPressed" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
