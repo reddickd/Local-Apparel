@@ -3,4 +3,5 @@
     <string name="emailField">Email</string>
     <string name="passwordField">Password</string>
     <string name="login">Log In</string>
+    <string name="verifyPasswordField">Verify Password</string>
 </resources>
