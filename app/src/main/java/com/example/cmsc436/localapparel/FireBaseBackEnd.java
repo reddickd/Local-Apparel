@@ -23,10 +23,10 @@ public class FireBaseBackEnd {
 
     }
 
-    public void addUser(String email, String password){
+    public void addUser(String email, String password, String uid){
 
-        User userToAdd = new User(email,password);
-        ref.child("users").child(email).setValue(userToAdd);
+        User userToAdd = new User(email,password,uid);
+        ref.child("users").child(uid).setValue(userToAdd);
 
 
     }

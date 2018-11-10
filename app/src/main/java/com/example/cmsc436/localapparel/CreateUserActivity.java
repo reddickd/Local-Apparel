@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,7 +59,13 @@ public class CreateUserActivity extends AppCompatActivity {
                             address is valid, so creation should be successful */
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "successfully created user with email");
+                                FirebaseDatabase fire = FirebaseDatabase.getInstance("https://localapparel-96283.firebaseio.com/");
+                                FireBaseBackEnd backEnd  = new FireBaseBackEnd(fire);
+
+
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                backEnd.addUser(emailField.getText().toString(),passwordField.getText().toString(),user.getUid());
+
                                 startActivity(new Intent(CreateUserActivity.this,
                                         MainPage.class));
                             } else {

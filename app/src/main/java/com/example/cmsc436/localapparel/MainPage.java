@@ -49,7 +49,7 @@ public class MainPage extends AppCompatActivity{
     }
 
     public void sendMessagePressed(View view){
-        backEnd.sendMessage();
+        //backEnd.sendMessage();
     }
 
     public void listItemPressed(View view){
