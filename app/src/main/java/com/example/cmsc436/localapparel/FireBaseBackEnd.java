@@ -23,7 +23,11 @@ public class FireBaseBackEnd {
 
     }
 
-    public void sendMessage(){
+    public void addUser(String email, String password){
+
+        User userToAdd = new User(email,password);
+        ref.child("users").child(email).setValue(userToAdd);
+
 
     }
 
