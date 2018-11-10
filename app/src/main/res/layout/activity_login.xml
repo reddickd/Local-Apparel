@@ -39,6 +39,14 @@
             tools:layout_editor_absoluteX="136dp"
             tools:layout_editor_absoluteY="313dp"
             android:onClick="logInPressed" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/createAccount"
+            android:textColor="@color/createAccountText"
+            android:onClick="createNewAccount"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

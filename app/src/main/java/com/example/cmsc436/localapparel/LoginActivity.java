@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    //Onclick method for when user trys to login
     public void logInPressed(View view) {
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                     //Get current user information
                     FirebaseUser user = mAuth.getCurrentUser();
                     //go to next activty
+
                     startActivity(new Intent(LoginActivity.this, MainPage.class));
                 }else{
                     //Sign in failed
@@ -56,5 +58,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //Onclick method when the user clicks the Create New Account Text
+    public void createNewAccount(View view){
+        startActivity(new Intent(LoginActivity.this, CreateUserActivity.class));
     }
 }
