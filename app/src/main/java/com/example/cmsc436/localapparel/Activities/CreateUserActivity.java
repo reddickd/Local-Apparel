@@ -1,15 +1,21 @@
-package com.example.cmsc436.localapparel;
+package com.example.cmsc436.localapparel.Activities;
 
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
+import com.example.cmsc436.localapparel.Objects.User;
+import com.example.cmsc436.localapparel.R;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +30,7 @@ public class CreateUserActivity extends AppCompatActivity {
     private EditText emailField;
     private EditText passwordField;
     private EditText verifyPasswordField;
+    private EditText phoneNumField;
     private String TAG = "CreateUserActivity";
 
     @Override
@@ -35,15 +42,23 @@ public class CreateUserActivity extends AppCompatActivity {
         emailField = findViewById(R.id.emailFieldCreateUser);
         passwordField = findViewById(R.id.passwordFieldCreateUser);
         verifyPasswordField = findViewById(R.id.verifyPasswordFieldCreateUser);
+        phoneNumField = findViewById(R.id.phoneNumberField);
     }
 
     public void createUserPressed(View view) {
         /// now we gotta figure out what to do with the information once the button is rpessed
         // ie make sure he passwords match and the email address isnt used yet
 
-        String email = emailField.getText().toString();
-        String password = passwordField.getText().toString();
+        final String email = emailField.getText().toString();
+        final String password = passwordField.getText().toString();
         String verifyPassword = verifyPasswordField.getText().toString();
+        final String phoneNum = phoneNumField.getText().toString();
+
+        //if no phone number was entered
+        if(phoneNum.trim().equals("")){
+            Toast.makeText(CreateUserActivity.this, "Please enter your phone number.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // if the passwords don't match then display an error message
         if (!password.equals(verifyPassword)) {
@@ -64,7 +79,8 @@ public class CreateUserActivity extends AppCompatActivity {
 
 
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                backEnd.addUser(emailField.getText().toString(),passwordField.getText().toString(),user.getUid());
+                                User tempUser = new User(email,password, user.getUid(), phoneNum);
+                                backEnd.addUser(tempUser);
 
                                 startActivity(new Intent(CreateUserActivity.this,
                                         MainPage.class));

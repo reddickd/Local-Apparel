@@ -1,5 +1,8 @@
-package com.example.cmsc436.localapparel;
+package com.example.cmsc436.localapparel.Activities;
 
+import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
+import com.example.cmsc436.localapparel.Objects.User;
+import com.example.cmsc436.localapparel.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -8,7 +11,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.os.Debug;
 import android.widget.LinearLayout;
 
 import android.view.LayoutInflater;
@@ -17,10 +21,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainPage extends AppCompatActivity{
 
@@ -49,7 +53,7 @@ public class MainPage extends AppCompatActivity{
     }
 
     public void sendMessagePressed(View view){
-        //backEnd.sendMessage();
+        startActivity(new Intent(MainPage.this, MessageListActivity.class));
     }
 
     public void listItemPressed(View view){
@@ -124,10 +128,10 @@ public class MainPage extends AppCompatActivity{
 //            setContentView(mainLayout);
 //        }
     //}
-//    @Override
-//    protected void onStart(){
-//        super.onStart();
-//
+    @Override
+    protected void onStart(){
+        super.onStart();
+
 //        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
@@ -145,8 +149,8 @@ public class MainPage extends AppCompatActivity{
 //                myRef.setValue(userName.getText().toString());
 //            }
 //        });
-//
-//    }
+
+    }
 
 
 

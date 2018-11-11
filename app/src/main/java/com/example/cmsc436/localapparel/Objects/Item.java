@@ -1,4 +1,4 @@
-package com.example.cmsc436.localapparel;
+package com.example.cmsc436.localapparel.Objects;
 
 public  class Item{
     int id;

@@ -5,4 +5,6 @@
     <string name="login">Log In</string>
     <string name="verifyPasswordField">Verify Password</string>
     <string name="createAccount">Create A New Account</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="myMessages">My Messages</string>
 </resources>
