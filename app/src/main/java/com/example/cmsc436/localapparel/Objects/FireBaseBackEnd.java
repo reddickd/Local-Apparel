@@ -63,12 +63,12 @@ public class FireBaseBackEnd {
         return null;
     }
 
-    public void listItem(String item){
+    public void listItem(String item, String url){
 
         if(ref.child("items") != null){
             id = getItemCount();
         }
-        ref.child("items").child(item).setValue(new Item(id));
+        ref.child("items").child(item).setValue(new Item(id,url));
 
     }
 

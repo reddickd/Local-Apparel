@@ -10,6 +10,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import android.app.Notification;
+import android.support.annotation.NonNull;
+import com.google.firebase.storage.StorageException;
 
 import android.content.Intent;
 import android.os.Debug;
@@ -25,14 +32,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.app.Activity;
+import android.net.Uri;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import java.io.FileNotFoundException;
+import com.google.android.play.core.tasks.OnFailureListener;
+import com.google.android.play.core.tasks.OnSuccessListener;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 
 public class MainPage extends AppCompatActivity{
 
+    String downloadURL = "";
     FirebaseDatabase fire;
     FireBaseBackEnd backEnd;
+    FirebaseStorage storage;
+    StorageReference storeRef;
     Button sendMessageButton, listItemButton;
     FirebaseAuth mAuth;
     FirebaseUser user;
+    public static final int GET_FROM_GALLERY = 3;
 
 
     @Override
@@ -41,6 +61,8 @@ public class MainPage extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         //parent firebase database reference
         fire = FirebaseDatabase.getInstance("https://localapparel-96283.firebaseio.com/");
+        storage = FirebaseStorage.getInstance("gs://localapparel-96283.appspot.com");
+        storeRef = storage.getReference();
         backEnd = new FireBaseBackEnd(fire);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -72,17 +94,66 @@ public class MainPage extends AppCompatActivity{
         // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
 
         submitItemButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                backEnd.listItem(itemName.getText().toString());
+                backEnd.listItem(itemName.getText().toString(),storeRef.child("images").child(user.getUid()).getDownloadUrl().toString());
                 popupWindow.dismiss();
             }
         });
 
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        //Detects request codes
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] byteData = baos.toByteArray();
+            UploadTask uploadTask = storeRef.child("images").child(user.getUid()).putBytes(byteData);
+            //uploadTask.
+            if(uploadTask.isComplete()){
+
+            }
+//            uploadTask.addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception exception) {
+//                    int errorCode = ((StorageException) exception).getErrorCode();
+//                    String errorMessage = exception.getMessage();
+//
+//                    exception.printStackTrace();
+//                }
+//            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                   // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//                    // ...
+//
+//                }
+//            });
+        }
+
+    }
+
+
 
 //    public class ShowPopUp extends Activity {
 //

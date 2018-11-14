@@ -2,14 +2,15 @@ package com.example.cmsc436.localapparel.Objects;
 
 public  class Item{
     int id;
+    String downloadURL;
 
 
     public Item(){
 
     }
 
-    public Item(int id){
-
+    public Item(int id, String downloadURL){
+        this.downloadURL = downloadURL;
         this.id = id;
     }
 
@@ -20,4 +21,11 @@ public  class Item{
         this.id = id;
     }
 
+    public String getDownloadURL() {
+        return downloadURL;
+    }
+
+    public void setDownloadURL(String downloadURL) {
+        this.downloadURL = downloadURL;
+    }
 }
