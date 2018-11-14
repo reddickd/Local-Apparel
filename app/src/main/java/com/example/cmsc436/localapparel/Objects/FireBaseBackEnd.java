@@ -1,11 +1,16 @@
 package com.example.cmsc436.localapparel.Objects;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Debug;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cmsc436.localapparel.Activities.MainPage;
 import com.example.cmsc436.localapparel.Objects.Item;
 import com.example.cmsc436.localapparel.Objects.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -14,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +30,7 @@ public class FireBaseBackEnd {
     DatabaseReference ref;
     StorageReference storageReference;
     List<User> allUsers;
+    Bitmap bmp; //used to store and return a bitmap for the image you want
 
     public FireBaseBackEnd(FirebaseDatabase fire){
         this.fire = fire;
@@ -99,6 +106,19 @@ public class FireBaseBackEnd {
         storageReference.child("profilePictures").child(fileName).putFile(imageURI);
     }
 
+    //Does not work due to synchroniztion.  will return null before onsuccess finishes
+//    public Bitmap getProfilePicture(String fileName){
+//
+//        storageReference.child("profilePictures").child(fileName).getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//            @Override
+//            public void onSuccess(byte[] bytes) {
+//                bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                Log.d("TEST", "downloaded picture");
+//            }
+//        });
+//
+//        return bmp;
+//    }
 }
 
 

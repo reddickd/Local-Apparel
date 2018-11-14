@@ -15,11 +15,14 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import android.app.Notification;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import com.google.firebase.storage.StorageException;
 
 import android.content.Intent;
 import android.os.Debug;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import android.view.LayoutInflater;
@@ -53,6 +56,7 @@ public class MainPage extends AppCompatActivity{
     FirebaseAuth mAuth;
     FirebaseUser user;
     public static final int GET_FROM_GALLERY = 3;
+    ImageView testProfilePic;
 
 
     @Override
@@ -70,7 +74,7 @@ public class MainPage extends AppCompatActivity{
         sendMessageButton = (Button) findViewById(R.id.send_message);
         listItemButton = (Button) findViewById(R.id.list_item);
 
-
+        testProfilePic = findViewById(R.id.display_profile_picture);
 
     }
 
@@ -154,6 +158,18 @@ public class MainPage extends AppCompatActivity{
     }
 
 
+        //Just used this to see how getting images would work.  accesses storage and gets user profile picture
+        private void displayProfilePicture(){
+            storeRef.child("profilePictures").child(user.getUid()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    testProfilePic.setImageBitmap(bmp);
+                    Log.d("TEST", "downloaded picture");
+                }
+            });
+
+        }
 
 //    public class ShowPopUp extends Activity {
 //
@@ -203,6 +219,7 @@ public class MainPage extends AppCompatActivity{
     protected void onStart(){
         super.onStart();
 
+        displayProfilePicture();
 //        myRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
