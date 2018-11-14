@@ -1,5 +1,6 @@
 package com.example.cmsc436.localapparel.Objects;
 
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.example.cmsc436.localapparel.Activities.MainPage;
@@ -10,7 +11,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +22,7 @@ public class FireBaseBackEnd {
     int id;
     FirebaseDatabase fire;
     DatabaseReference ref;
+    StorageReference storageReference;
     List<User> allUsers;
 
     public FireBaseBackEnd(FirebaseDatabase fire){
@@ -25,6 +30,7 @@ public class FireBaseBackEnd {
         allUsers = new ArrayList<User>();
 
         ref = fire.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
         if(ref.child("items") != null){
             id = getItemCount();
         }else{
@@ -88,6 +94,10 @@ public class FireBaseBackEnd {
         return id;
     }
 
+    public void saveProfilePicture(Uri imageURI, String fileName){
+
+        storageReference.child("profilePictures").child(fileName).putFile(imageURI);
+    }
 
 }
 

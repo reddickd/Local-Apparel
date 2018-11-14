@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="48dp">
+        tools:layout_editor_absoluteY="26dp">
 
         <EditText
             android:id="@+id/emailFieldCreateUser"
@@ -51,6 +51,19 @@
             android:ems="10"
             android:hint="@string/phoneNumber"
             android:inputType="phone" />
+
+        <ImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="286dp"
+            android:layout_height="200dp"
+            app:srcCompat="@android:color/background_light" />
+
+        <Button
+            android:id="@+id/uploadImageButton"
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:text="@string/uploadProfilePicture"
+            android:onClick="uploadProfilePicture"/>
 
         <Button
             android:id="@+id/loginButtonCreateUser"
