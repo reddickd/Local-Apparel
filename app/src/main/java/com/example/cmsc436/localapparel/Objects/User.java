@@ -1,11 +1,14 @@
 package com.example.cmsc436.localapparel.Objects;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
 
     String email,password,uid,phoneNumber;
+    Double userLat, userLong;
     List<Chat> chats;
 
     //String name
@@ -15,7 +18,7 @@ public class User {
 
     }
 
-    public User(String email,String password,String uid,String phoneNumber){
+    public User(String email,String password,String uid,String phoneNumber, Double lat, Double longitude){
 
         //this.name = name;
         this.uid = uid;
@@ -24,6 +27,8 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.chats = new ArrayList<Chat>();
         chats.add(new Chat("test1", "test2"));
+        this.userLat = lat;
+        this.userLong = longitude;
     }
 
 //    public User(String name,String email,String password){

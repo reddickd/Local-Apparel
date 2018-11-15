@@ -34,5 +34,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.8.0'
     implementation 'com.google.firebase:firebase-core:11.8.0'
 
-
+    implementation 'com.android.support:support-v4:23.0.1'
 }

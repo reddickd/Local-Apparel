@@ -1,9 +1,13 @@
 package com.example.cmsc436.localapparel.Activities;
 
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 
 import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
 import com.example.cmsc436.localapparel.Objects.User;
@@ -31,6 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class CreateUserActivity extends AppCompatActivity {
 
     private static final int RESULT_LOAD_IMAGE = 1;
+    private static final int REQUEST_LOCATION_PERMISSION = 2;
     private FirebaseAuth mAuth;
     private EditText emailField;
     private EditText passwordField;
@@ -39,6 +45,10 @@ public class CreateUserActivity extends AppCompatActivity {
     private ImageView profilePicImagePreview;
     private String TAG = "CreateUserActivity";
     private Uri profileImageUri;
+
+    private LocationManager mLocationManger;
+    private Location userLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +61,8 @@ public class CreateUserActivity extends AppCompatActivity {
         verifyPasswordField = findViewById(R.id.verifyPasswordFieldCreateUser);
         phoneNumField = findViewById(R.id.phoneNumberField);
         profilePicImagePreview = findViewById(R.id.profilePicture);
+        mLocationManger = (LocationManager) getSystemService(LOCATION_SERVICE);
+
     }
 
     public void createUserPressed(View view) {
@@ -74,6 +86,13 @@ public class CreateUserActivity extends AppCompatActivity {
             return;
         }
 
+        //get users location
+        userLocation = getLocation();
+        if(userLocation == null){
+            Toast.makeText(CreateUserActivity.this, "Cannot get location", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // if the passwords don't match then display an error message
         if (!password.equals(verifyPassword)) {
             Toast.makeText(CreateUserActivity.this, "The passwords must match.",
@@ -93,7 +112,7 @@ public class CreateUserActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
 
                                 //creates a new user and puts them in the database
-                                User tempUser = new User(email,password, user.getUid(), phoneNum);
+                                User tempUser = new User(email,password, user.getUid(), phoneNum, userLocation.getLatitude(), userLocation.getLongitude());
                                 backEnd.addUser(tempUser);
 
                                 backEnd.saveProfilePicture(profileImageUri, user.getUid()); //saves profile pic in database
@@ -132,5 +151,18 @@ public class CreateUserActivity extends AppCompatActivity {
             profileImageUri = data.getData();
             profilePicImagePreview.setImageURI(profileImageUri);
         }
+    }
+
+    private Location getLocation(){
+        //get permission
+        if (ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  }, REQUEST_LOCATION_PERMISSION );
+        }
+        if (ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION   }, REQUEST_LOCATION_PERMISSION );
+        }
+
+        return mLocationManger.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
     }
 }
