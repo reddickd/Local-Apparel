@@ -103,7 +103,7 @@ public class MainPage extends AppCompatActivity{
         submitItemButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                backEnd.listItem(itemName.getText().toString(),storeRef.child("images").child(user.getUid()).getDownloadUrl().toString());
+                backEnd.listItem(itemName.getText().toString(),storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(),user.getUid());
                 popupWindow.dismiss();
             }
         });

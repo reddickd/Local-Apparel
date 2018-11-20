@@ -2,16 +2,17 @@ package com.example.cmsc436.localapparel.Objects;
 
 public  class Item{
     int id;
-    String downloadURL;
+    String downloadURL,userID;
 
 
     public Item(){
 
     }
 
-    public Item(int id, String downloadURL){
+    public Item(int id, String downloadURL, String userID){
         this.downloadURL = downloadURL;
         this.id = id;
+        this.userID = userID;
     }
 
     public int getCount(){
@@ -27,5 +28,13 @@ public  class Item{
 
     public void setDownloadURL(String downloadURL) {
         this.downloadURL = downloadURL;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getUserID() {
+        return userID;
     }
 }
