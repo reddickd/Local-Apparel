@@ -82,6 +82,10 @@ public class MainPage extends AppCompatActivity{
         startActivity(new Intent(MainPage.this, MessageListActivity.class));
     }
 
+    public void goToMarketplace(View view){
+        startActivity(new Intent(MainPage.this, MarketPlaceActivity.class));
+    }
+
     public void listItemPressed(View view){
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);

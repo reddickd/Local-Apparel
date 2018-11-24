@@ -25,5 +25,6 @@
     <string name="conditionUsed">used</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="goToMarketPlace">Go To Marketplace</string>
 
 </resources>

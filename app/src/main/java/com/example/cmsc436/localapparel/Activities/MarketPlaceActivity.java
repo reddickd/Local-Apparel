@@ -7,6 +7,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import android.Manifest;
 import android.content.Intent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import java.util.*;
@@ -59,11 +61,11 @@ import android.support.v4.widget.DrawerLayout;
 
 public class MarketPlaceActivity extends AppCompatActivity {
     TextView textViews,textViews2;
-    FirebaseDatabase fire;
+    DatabaseReference fire;
     FireBaseBackEnd backEnd;
     FirebaseStorage storage;
     StorageReference storeRef;
-    ArrayList<Item> listingItems;
+    List<Item> listingItems;
     ListView listView;
     CustomAdapter adapter;
     private DrawerLayout mDrayerlayout;
@@ -76,6 +78,39 @@ public class MarketPlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.market_place);
+        backEnd = new FireBaseBackEnd(FirebaseDatabase.getInstance());
+        fire = FirebaseDatabase.getInstance().getReference();
+        storeRef = FirebaseStorage.getInstance().getReference();
+        listingItems = new ArrayList<Item>();
+
+        fire.child("items").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                listingItems.clear();
+                for (DataSnapshot child : children) {
+                    Item item = child.getValue(Item.class);
+                    listingItems.add(item);
+                }
+                //ListView Custom Adapter
+                listView = (ListView)findViewById(R.id.listItem);
+                //THIS HERE BELOW WAS A DUMMY TEST TO SEE IF MY FUNCTIONS WORK, JUST NEED TO ASSIGN LISTINGITEMS THE CORRECT ITEMS ARRAYLIST
+
+                //listingItems.add(new Item(54,"Gucci","UserID", "","","","","",0,0,0));
+                //listingItems.add(new Item(60,"LV","USERID"));
+                //listingItems.add(new Item(64,"Prada","USERID"));
+
+                adapter = new CustomAdapter(MarketPlaceActivity.this,R.layout.customlistinglayout,listingItems);
+                listView.setAdapter(adapter);
+                //Button popUpB = (Button) findViewById(R.id.pop_window);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
 /*
         // DRAWER CODE PART IF YOU WANT TO USE COMMENT THIS OUT ADD IN THE DRAWER ID INTO THE LAYOUT FILE
@@ -88,16 +123,16 @@ public class MarketPlaceActivity extends AppCompatActivity {
 */
 
         //ListView Custom Adapter
-        listingItems = new ArrayList<Item>();
-        listView = (ListView)findViewById(R.id.listItem);
+        //listingItems = backEnd.getItems();
+        //listView = (ListView)findViewById(R.id.listItem);
         //THIS HERE BELOW WAS A DUMMY TEST TO SEE IF MY FUNCTIONS WORK, JUST NEED TO ASSIGN LISTINGITEMS THE CORRECT ITEMS ARRAYLIST
 
-        listingItems.add(new Item(54,"Gucci","UserID"));
-        listingItems.add(new Item(60,"LV","USERID"));
-        listingItems.add(new Item(64,"Prada","USERID"));
+        //listingItems.add(new Item(54,"Gucci","UserID", "","","","","",0,0,0));
+        //listingItems.add(new Item(60,"LV","USERID"));
+        //listingItems.add(new Item(64,"Prada","USERID"));
 
-        adapter = new CustomAdapter(this,R.layout.customlistinglayout,listingItems);
-        listView.setAdapter(adapter);
+        //adapter = new CustomAdapter(this,R.layout.customlistinglayout,listingItems);
+        //listView.setAdapter(adapter);
         //Button popUpB = (Button) findViewById(R.id.pop_window);
 
     }
@@ -278,7 +313,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             View view = layoutInflater.inflate(resource,null,false);
-            ImageView imageView = view.findViewById(R.id.imageView);
+            final ImageView imageView = view.findViewById(R.id.imageView);
             TextView name = view.findViewById(R.id.name);
             TextView size = view.findViewById(R.id.size);
             TextView brand = view.findViewById(R.id.brand);
@@ -287,8 +322,20 @@ public class MarketPlaceActivity extends AppCompatActivity {
             final Item item = itemList.get(position);
 
 
-            name.setText(String.valueOf(item.getCount()));
-            size.setText(item.getDownloadURL());
+            name.setText(String.valueOf(item.getName()));
+            size.setText(item.getSize());
+            brand.setText(item.getBrand());
+            price.setText(item.getPrice());
+            condition.setText(item.getCondition());
+
+            storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    imageView.setImageBitmap(bmp);
+                    Log.d("TEST", "downloaded picture");
+                }
+            });
             //imageView.setImageURI();
 
             // GO TO ANOTHER ACTIVITY FOR FULL DETAIL OF THE ITEM CLICKED, SET A ONCLICK LISTENER

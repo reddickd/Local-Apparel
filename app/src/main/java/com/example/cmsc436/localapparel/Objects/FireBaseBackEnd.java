@@ -48,7 +48,7 @@ public class FireBaseBackEnd {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
+                allUsers.clear();
                 for (DataSnapshot child : children) {
                     User user = child.getValue(User.class);
                     allUsers.add(user);
@@ -60,6 +60,8 @@ public class FireBaseBackEnd {
 
             }
         });
+
+
 
     }
 
@@ -81,7 +83,7 @@ public class FireBaseBackEnd {
         if(ref.child("items") != null){
             id = getItemCount();
         }
-        ref.child("items").child(item).setValue(new Item(id,url,userID));
+       // ref.child("items").child(item).setValue(new Item(id,url,userID));
 
     }
 
