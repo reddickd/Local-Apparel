@@ -1,6 +1,8 @@
 package com.example.cmsc436.localapparel.Objects;
 
-public  class Item{
+import java.io.Serializable;
+
+public  class Item implements Serializable{
     int id;
     String downloadURL,userID;
 

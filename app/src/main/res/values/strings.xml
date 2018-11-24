@@ -8,4 +8,22 @@
     <string name="phoneNumber">Phone Number</string>
     <string name="myMessages">My Messages</string>
     <string name="uploadProfilePicture">Upload Profile Picture</string>
+    <string name="brand">Brand:</string>
+    <string name="city">City:</string>
+    <string name="price">Price:</string>
+    <string name="to">To</string>
+    <string name="filter">Filter</string>
+    <string name="radius">Radius</string>
+    <string name="checkS">S</string>
+    <string name="checkM">M</string>
+    <string name="checkL">L</string>
+    <string name="checkXL">XL</string>
+    <string name="size">Size</string>
+    <string name="category">Category</string>
+    <string name="condition">Condition</string>
+    <string name="conditionNew">new</string>
+    <string name="conditionUsed">used</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+
 </resources>
