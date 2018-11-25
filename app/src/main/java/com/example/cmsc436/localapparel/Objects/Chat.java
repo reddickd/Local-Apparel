@@ -1,9 +1,10 @@
 package com.example.cmsc436.localapparel.Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chat {
+public class Chat implements Serializable {
 
     private String reciever;
     private String sender;
@@ -15,7 +16,6 @@ public class Chat {
         this.reciever = to;
         this.itemName = itemName;
         messages = new ArrayList<Message>();
-        messages.add(new Message("test1", "is it working"));
     }
 
     public Chat() {

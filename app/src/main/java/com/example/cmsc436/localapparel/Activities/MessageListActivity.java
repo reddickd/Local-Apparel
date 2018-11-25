@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.cmsc436.localapparel.Objects.Chat;
 import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
 import com.example.cmsc436.localapparel.Objects.Item;
+import com.example.cmsc436.localapparel.Objects.Message;
 import com.example.cmsc436.localapparel.Objects.User;
 import com.example.cmsc436.localapparel.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -172,6 +173,15 @@ public class MessageListActivity extends AppCompatActivity {
                 });
             }
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent toIndividualChat = new Intent(context, IndividualChat.class);
+
+                    toIndividualChat.putExtra("Chat", chat);
+                    startActivity(toIndividualChat);
+                }
+            });
 
             return view;
         }

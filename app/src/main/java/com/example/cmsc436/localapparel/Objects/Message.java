@@ -1,6 +1,11 @@
 package com.example.cmsc436.localapparel.Objects;
 
-public class Message {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Message implements Serializable {
 
     private String sender;
     private String message;
@@ -19,4 +24,6 @@ public class Message {
     public String getMessage() {
         return message;
     }
+
+
 }
