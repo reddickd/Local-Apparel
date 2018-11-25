@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,7 +70,7 @@ public class IndividualChat extends AppCompatActivity {
         message = findViewById(R.id.edittext_chatbox);
         sendMessageButton = findViewById(R.id.button_chatbox_send);
 
-        Chat currentChat = (Chat) getIntent().getSerializableExtra("Chat");
+        currentChat = (Chat) getIntent().getSerializableExtra("Chat");
         allMessages = currentChat.getMessages();
 
         allUsers = new ArrayList<User>();
@@ -100,13 +101,18 @@ public class IndividualChat extends AppCompatActivity {
      public void sendMessage(View view){
         String messageToBeSent = message.getText().toString();
 
-        if(messageToBeSent.trim() == ""){
+        if(messageToBeSent.trim().equals("")){
             Toast.makeText(IndividualChat.this, "Please Enter a Message", Toast.LENGTH_SHORT).show();
+
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
             return;
         }
 
         Message newMessage = new Message(user.getUid(), messageToBeSent);
-        currentChat.addMessage(newMessage);
 
         User otherUser = null;
         if(currentChat.getSender().equals(user.getUid())){
@@ -130,8 +136,14 @@ public class IndividualChat extends AppCompatActivity {
                 c.addMessage(newMessage);
             }
         }
+         currentChat.addMessage(newMessage);
 
+        message.setText("");
+         InputMethodManager inputManager = (InputMethodManager)
+                 getSystemService(Context.INPUT_METHOD_SERVICE);
 
+         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                 InputMethodManager.HIDE_NOT_ALWAYS);
      }
 
 //    private void testMessage(){

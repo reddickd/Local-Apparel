@@ -48,7 +48,7 @@ public class Chat implements Serializable {
             return false;
         }else{
             Chat other = (Chat) obj;
-            return (this.sender == other.sender) && (this.reciever == other.reciever) && (this.itemName == other.itemName);
+            return (this.sender.equals(other.sender)) && (this.reciever.equals(other.reciever)) && (this.itemName.equals(other.itemName));
         }
 
     }
