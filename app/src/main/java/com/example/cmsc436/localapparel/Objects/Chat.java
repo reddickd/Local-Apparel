@@ -5,13 +5,15 @@ import java.util.List;
 
 public class Chat {
 
-    private String from;
-    private String to;
+    private String reciever;
+    private String sender;
+    private String itemName;
     private List<Message> messages;
 
-    public Chat(String from, String to){
-        this.from = from;
-        this.to = to;
+    public Chat(String from, String to, String itemName){
+        this.sender = from;
+        this.reciever = to;
+        this.itemName = itemName;
         messages = new ArrayList<Message>();
         messages.add(new Message("test1", "is it working"));
     }
@@ -25,12 +27,15 @@ public class Chat {
     }
 
     public String getSender(){
-        return this.from;
+        return this.sender;
     }
 
     public String getReciever(){
-        return this.to;
+        return this.reciever;
 
+    }
+    public String getItemName(){
+        return this.itemName;
     }
 
 }

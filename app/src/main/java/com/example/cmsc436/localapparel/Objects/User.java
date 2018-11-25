@@ -26,7 +26,6 @@ public class User {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.chats = new ArrayList<Chat>();
-        chats.add(new Chat("test1", "test2"));
         this.userLat = lat;
         this.userLong = longitude;
     }
