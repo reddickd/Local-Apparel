@@ -22,6 +22,7 @@ import com.google.firebase.storage.StorageException;
 import android.content.Intent;
 import android.os.Debug;
 import android.util.Log;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -62,6 +63,8 @@ public class MainPage extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         //parent firebase database reference
         fire = FirebaseDatabase.getInstance("https://localapparel-96283.firebaseio.com/");
