@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cmsc436.localapparel.Objects.Chat;
 import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
@@ -44,33 +46,115 @@ public class IndividualChat extends AppCompatActivity {
     FireBaseBackEnd backEnd;
     DatabaseReference ref;
     StorageReference storeRef;
-    User mainUser;
     FirebaseAuth mAuth;
     FirebaseUser user;
-    ListView listView;
-    MessageListActivity.CustomAdapter mAdapter;
-    List<Chat> chatList;
     List<User> allUsers;
     List<Message> allMessages;
     RecyclerView mMessageRecycler;
     MessageListAdapter mMessageAdapter;
+    EditText message;
+    Button sendMessageButton;
+    Chat currentChat;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.individual_chat);
-        Chat chat = (Chat) getIntent().getSerializableExtra("chat");
-        allMessages = chat.getMessages();
+        mAuth = FirebaseAuth.getInstance();
+        user= mAuth.getCurrentUser();
+        backEnd = new FireBaseBackEnd(FirebaseDatabase.getInstance());
+        ref = FirebaseDatabase.getInstance().getReference();
+        storeRef = FirebaseStorage.getInstance().getReference();
+        message = findViewById(R.id.edittext_chatbox);
+        sendMessageButton = findViewById(R.id.button_chatbox_send);
 
-        mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        mMessageAdapter = new MessageListAdapter(this, allMessages);
-        mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+        Chat currentChat = (Chat) getIntent().getSerializableExtra("Chat");
+        allMessages = currentChat.getMessages();
 
+        allUsers = new ArrayList<User>();
+        ref.child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                allUsers.clear();
+                for (DataSnapshot child : children) {
+                    User user = child.getValue(User.class);
+                    allUsers.add(user);
+                }
 
+                mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
+                mMessageAdapter = new MessageListAdapter(IndividualChat.this, allMessages);
+                mMessageRecycler.setAdapter(mMessageAdapter);
+                mMessageRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
+     public void sendMessage(View view){
+        String messageToBeSent = message.getText().toString();
+
+        if(messageToBeSent.trim() == ""){
+            Toast.makeText(IndividualChat.this, "Please Enter a Message", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Message newMessage = new Message(user.getUid(), messageToBeSent);
+        currentChat.addMessage(newMessage);
+
+        User otherUser = null;
+        if(currentChat.getSender().equals(user.getUid())){
+            for(User u : allUsers){
+                if(u.getUid().equals(currentChat.getReciever())){
+                    otherUser = u;
+                    break;
+                }
+            }
+        }else{
+            for(User u : allUsers){
+                if(u.getUid().equals(currentChat.getSender())){
+                    otherUser = u;
+                    break;
+                }
+            }
+        }
+
+        for(Chat c : otherUser.getChats()){
+            if(currentChat.equals(c)){
+                c.addMessage(newMessage);
+            }
+        }
+
+
+     }
+
+//    private void testMessage(){
+//        allMessages = new ArrayList<Message>();
+//        Message m = new Message("t9qujixydjhMiaBgDEfHR25vxpo1", "test");
+//
+//        Message m1 = new Message("UMrlwETJz1cz8fskv5aCcP9R7al2", "test");
+//
+//
+//        allMessages.add(m);
+//        allMessages.add(m1);
+//        allMessages.add(m1);
+//        allMessages.add(m);
+//        allMessages.add(m1);
+//        allMessages.add(m);
+//        allMessages.add(m);
+//        allMessages.add(m);
+//        allMessages.add(m1);
+//        allMessages.add(m);
+//        allMessages.add(m1);
+//        allMessages.add(m1);
+//        allMessages.add(m);
+//    }
 
     public class MessageListAdapter extends RecyclerView.Adapter {
         private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -103,6 +187,7 @@ public class IndividualChat extends AppCompatActivity {
             }
         }
 
+
         // Inflates the appropriate layout according to the ViewType.
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -134,49 +219,63 @@ public class IndividualChat extends AppCompatActivity {
                     ((ReceivedMessageHolder) holder).bind(message);
             }
         }
+    }
 
-        private class SentMessageHolder extends RecyclerView.ViewHolder {
-            TextView messageText, timeText;
+    private class SentMessageHolder extends RecyclerView.ViewHolder {
+        TextView messageText, timeText;
 
-            SentMessageHolder(View itemView) {
-                super(itemView);
+        SentMessageHolder(View itemView) {
+            super(itemView);
 
-                messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-                timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-            }
-
-            void bind(Message message) {
-                messageText.setText(message.getMessage());
-
-                // Format the stored timestamp into a readable String using method.
-                //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
-            }
+            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
+            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
         }
 
-        private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
-            TextView messageText, timeText, nameText;
-            ImageView profileImage;
+        void bind(Message message) {
+            messageText.setText(message.getMessage());
 
-            ReceivedMessageHolder(View itemView) {
-                super(itemView);
+            // Format the stored timestamp into a readable String using method.
+            //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
+        }
+    }
 
-                messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-                timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-                nameText = (TextView) itemView.findViewById(R.id.text_message_name);
-                profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
+    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+        TextView messageText, timeText, nameText;
+        ImageView profileImage;
+
+        ReceivedMessageHolder(View itemView) {
+            super(itemView);
+
+            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
+            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            nameText = (TextView) itemView.findViewById(R.id.text_message_name);
+            profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
+        }
+
+        void bind(Message message) {
+            messageText.setText(message.getMessage());
+
+            // Format the stored timestamp into a readable String using method.
+            //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
+
+            User otherUser = null;
+            for(User u : allUsers){
+                if(message.getSender().equals(u.getUid())){
+                    otherUser = u;
+                    break;
+                }
             }
+            nameText.setText(otherUser.getEmail());
 
-            void bind(Message message) {
-                messageText.setText(message.getMessage());
-
-                // Format the stored timestamp into a readable String using method.
-                //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
-
-                nameText.setText(message.getSender());
-
-                // Insert the profile image from the URL into the ImageView.
-                //Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);
-            }
+            // Insert the profile image from the URL into the ImageView.
+            storeRef.child("profilePictures").child(otherUser.getUid()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    profileImage.setImageBitmap(bmp);
+                    Log.d("TEST", "downloaded picture");
+                }
+            });
         }
     }
 

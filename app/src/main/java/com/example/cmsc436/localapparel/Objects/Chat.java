@@ -38,4 +38,22 @@ public class Chat implements Serializable {
         return this.itemName;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }
+
+        if(!(obj instanceof Chat)){
+            return false;
+        }else{
+            Chat other = (Chat) obj;
+            return (this.sender == other.sender) && (this.reciever == other.reciever) && (this.itemName == other.itemName);
+        }
+
+    }
+
+    public void addMessage(Message m){
+        messages.add(m);
+    }
 }

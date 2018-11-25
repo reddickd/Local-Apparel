@@ -55,10 +55,10 @@ public class MessageListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_list);
         //parent firebase database reference
-        fire = FirebaseDatabase.getInstance("https://localapparel-96283.firebaseio.com/");
-        backEnd = new FireBaseBackEnd(fire);
+
         mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
+        user= mAuth.getCurrentUser();
+        backEnd = new FireBaseBackEnd(FirebaseDatabase.getInstance());
         ref = FirebaseDatabase.getInstance().getReference();
         storeRef = FirebaseStorage.getInstance().getReference();
         allUsers = new ArrayList<User>();
