@@ -49,6 +49,7 @@ public class IndividualChat extends AppCompatActivity {
     StorageReference storeRef;
     FirebaseAuth mAuth;
     FirebaseUser user;
+    User mainUser;
     List<User> allUsers;
     List<Message> allMessages;
     RecyclerView mMessageRecycler;
@@ -71,7 +72,6 @@ public class IndividualChat extends AppCompatActivity {
         sendMessageButton = findViewById(R.id.button_chatbox_send);
 
         currentChat = (Chat) getIntent().getSerializableExtra("Chat");
-        allMessages = currentChat.getMessages();
 
         allUsers = new ArrayList<User>();
         ref.child("users").addValueEventListener(new ValueEventListener() {
@@ -84,8 +84,20 @@ public class IndividualChat extends AppCompatActivity {
                     allUsers.add(user);
                 }
 
+                for(User u : allUsers){
+                    if(u.getUid().equals(user.getUid())){
+                        mainUser = u;
+                    }
+                }
+
+                for(Chat c : mainUser.getChats()){
+                    if(currentChat.equals(c)){
+                        currentChat = c;
+                    }
+                }
+
                 mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-                mMessageAdapter = new MessageListAdapter(IndividualChat.this, allMessages);
+                mMessageAdapter = new MessageListAdapter(IndividualChat.this, currentChat.getMessages());
                 mMessageRecycler.setAdapter(mMessageAdapter);
                 mMessageRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             }
@@ -136,7 +148,13 @@ public class IndividualChat extends AppCompatActivity {
                 c.addMessage(newMessage);
             }
         }
-         currentChat.addMessage(newMessage);
+
+        for(Chat c : mainUser.getChats()){
+            if(currentChat.equals(c)){
+                c.addMessage(newMessage);
+            }
+        }
+
 
         message.setText("");
          InputMethodManager inputManager = (InputMethodManager)
@@ -144,6 +162,9 @@ public class IndividualChat extends AppCompatActivity {
 
          inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                  InputMethodManager.HIDE_NOT_ALWAYS);
+
+         backEnd.addUser(otherUser);
+         backEnd.addUser(mainUser);
      }
 
 //    private void testMessage(){

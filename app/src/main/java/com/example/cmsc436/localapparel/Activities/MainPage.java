@@ -63,7 +63,7 @@ public class MainPage extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.activity_main);
         //parent firebase database reference
         fire = FirebaseDatabase.getInstance("https://localapparel-96283.firebaseio.com/");
