@@ -3,15 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
+
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_width="227dp"
+        android:layout_height="335dp"
         android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="#A9A9A9">
+        android:background="@color/colorPrimaryDark"
+
+        tools:layout_editor_absoluteX="6dp"
+        tools:layout_editor_absoluteY="0dp">
 
 
         <EditText
@@ -19,9 +24,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/popupName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
             android:ems="10"
             android:hint="Item Name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/popupName"
@@ -29,17 +40,137 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
 
-            android:text="Item To List" />
+            android:text="Item To List"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/submitItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/itemName"
-            android:layout_centerHorizontal="true"
+            android:layout_alignStart="@+id/popupName"
+            android:layout_marginTop="219dp"
             android:text="Submit"
             android:textSize="15sp" />
 
+        <EditText
+            android:id="@+id/brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp"
+            android:ems="10"
+            android:hint="Brand"
+            android:inputType="textPersonName"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/itemName"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="108dp"
+            android:ems="10"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:lines="1"
+            android:scrollbars="vertical"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/category"
+            android:layout_width="138dp"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/itemName"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="132dp"
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/category"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="103dp"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/category"
+            android:text="Category"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/size_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/size"
+            android:layout_marginBottom="10dp"
+            android:text="Size"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:ems="10"
+            android:hint="Price"
+            android:inputType="textPersonName"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/new_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="37dp"
+            android:layout_marginLeft="37dp"
+            android:layout_marginTop="154dp"
+            android:text="New"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/used_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="141dp"
+            android:layout_marginLeft="141dp"
+            android:layout_marginTop="155dp"
+            android:text="Used"
+            android:textColor="@android:color/white" />
+
+        <Switch
+            android:id="@+id/condition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="84dp"
+            android:layout_marginLeft="84dp"
+            android:layout_marginTop="149dp" />
+
 
     </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

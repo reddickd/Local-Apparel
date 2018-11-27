@@ -14,6 +14,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import android.widget.Switch;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
+
 import android.app.Notification;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -48,7 +53,8 @@ import java.io.ByteArrayOutputStream;
 
 public class MainPage extends AppCompatActivity{
 
-    String downloadURL = "";
+    private Object dropdownSelected,sizeDropDownSelected;
+    String downloadURL = "",conditionString = "";
     FirebaseDatabase fire;
     FireBaseBackEnd backEnd;
     FirebaseStorage storage;
@@ -89,16 +95,39 @@ public class MainPage extends AppCompatActivity{
     }
 
     public void listItemPressed(View view){
+        //latitude and longitude
+        //make it so clicking off doesnt close popup
+
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_window,null);
         final Button submitItemButton  = (Button) popupView.findViewById(R.id.submitItem);
         final EditText itemName = (EditText)popupView.findViewById(R.id.itemName);
+        final EditText brandName = (EditText)popupView.findViewById(R.id.brand);
+        final EditText description = (EditText)popupView.findViewById(R.id.description);
+        final EditText price = (EditText) popupView.findViewById(R.id.price);
+        final Spinner spinner = (Spinner) popupView.findViewById(R.id.category);
+        final Spinner sizeSpinner = (Spinner) popupView.findViewById(R.id.size);
+        final Switch conidtionSwitch = (Switch) popupView.findViewById(R.id.condition);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.categories, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        ArrayAdapter<CharSequence> sizeAdapter = ArrayAdapter.createFromResource(this,
+                R.array.sizes, android.R.layout.simple_spinner_item);
+        sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sizeSpinner.setAdapter(sizeAdapter);
+
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        popupWindow.setOutsideTouchable(false);
+        popupWindow.update();
+
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window tolken
@@ -106,11 +135,48 @@ public class MainPage extends AppCompatActivity{
 
         startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                dropdownSelected = adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //make someone select
+            }
+        });
+
+        sizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sizeDropDownSelected = adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //make someone select
+            }
+        });
+
+
+        if(conidtionSwitch.isChecked()){
+            conditionString = "Used";
+        }else {
+            conditionString = "New";
+        }
+
         submitItemButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                backEnd.listItem(itemName.getText().toString(),storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(),user.getUid());
-                popupWindow.dismiss();
+
+                if(itemName.getText().toString().equals("")||brandName.getText().toString().equals("")||description.getText().toString().equals("")||price.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(),"Please fill out all fields",Toast.LENGTH_LONG).show();
+                }else {
+                    backEnd.listItem(itemName.getText().toString(), storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(), user.getUid(), brandName.getText().toString(),
+                            description.getText().toString(), dropdownSelected.toString(), conditionString, sizeDropDownSelected.toString(), price.getText().toString());
+                    popupWindow.dismiss();
+                }
             }
         });
 

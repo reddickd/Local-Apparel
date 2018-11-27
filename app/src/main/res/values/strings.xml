@@ -26,5 +26,18 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="goToMarketPlace">Go To Marketplace</string>
-
+    <string-array name="categories">
+        <item>Shirt</item>
+        <item>Pants</item>
+        <item>Shoes</item>
+        <item>Jacket/Sweater</item>
+        <item>Dress</item>
+        <item>Accessories</item>
+    </string-array>
+    <string-array name="sizes">
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+    </string-array>
 </resources>

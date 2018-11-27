@@ -21,6 +21,21 @@ public class Item implements Serializable{
 
     public Item(){}
 
+    public Item(int id, String downloadURL, String userID, String brand, String description, String category, String condition, String size, String price){
+        this.downloadURL = downloadURL;
+        this.id = id;
+        this.userID = userID;
+        //this.name = name;
+        this.brand = brand;
+        this.description = description;
+        this.category = category;
+        this.condition = condition;
+        this.size = size;
+        this.price = price;
+
+        otherImages = new ArrayList<String>();
+    }
+
     public Item(int id, String downloadURL, String userID, String name, String brand, String description, String category, String condition, String size, String price, double latitude, double longitude){
         this.downloadURL = downloadURL;
         this.id = id;
