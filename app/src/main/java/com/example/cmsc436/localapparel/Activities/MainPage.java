@@ -14,6 +14,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.content.Context;
+
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Switch;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -51,10 +61,10 @@ import com.google.android.play.core.tasks.OnSuccessListener;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 
-public class MainPage extends AppCompatActivity{
+public class MainPage extends AppCompatActivity implements LocationListener{
 
     private Object dropdownSelected,sizeDropDownSelected;
-    String downloadURL = "",conditionString = "";
+    String downloadURL = "",conditionString = "", latitude, longitude;
     FirebaseDatabase fire;
     FireBaseBackEnd backEnd;
     FirebaseStorage storage;
@@ -64,7 +74,8 @@ public class MainPage extends AppCompatActivity{
     FirebaseUser user;
     public static final int GET_FROM_GALLERY = 3;
     ImageView testProfilePic;
-
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -83,6 +94,11 @@ public class MainPage extends AppCompatActivity{
         listItemButton = (Button) findViewById(R.id.list_item);
 
         testProfilePic = findViewById(R.id.display_profile_picture);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+        }
 
     }
 
@@ -174,7 +190,7 @@ public class MainPage extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(),"Please fill out all fields",Toast.LENGTH_LONG).show();
                 }else {
                     backEnd.listItem(itemName.getText().toString(), storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(), user.getUid(), brandName.getText().toString(),
-                            description.getText().toString(), dropdownSelected.toString(), conditionString, sizeDropDownSelected.toString(), price.getText().toString());
+                            description.getText().toString(), dropdownSelected.toString(), conditionString, sizeDropDownSelected.toString(), price.getText().toString(),latitude,longitude);
                     popupWindow.dismiss();
                 }
             }
@@ -310,6 +326,85 @@ public class MainPage extends AppCompatActivity{
 //            }
 //        });
 
+    }
+    public final static  int MY_PERMISSIONS_LOCATION= 4;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED
+                ||ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_COARSE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(MainPage.this,
+                    new String[]{"android.permission.ACCESS_FINE_LOCATION",
+                            "android.permission.ACCESS_COARSE_LOCATION"},
+                    MY_PERMISSIONS_LOCATION);
+        }else
+            getLocationUpdates();
+
+    }
+
+    public void getLocationUpdates(){
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            String p1 = locationManager.getProvider(LocationManager.GPS_PROVIDER).getName();
+           // String p2 = locationManager.getProvider(LocationManager.NETWORK_PROVIDER).getName();
+            Location location = locationManager.getLastKnownLocation(p1);
+            //Location location2 = locationManager.getLastKnownLocation(p2);
+           // if (location != null || location2 != null) {
+            if (location != null){
+                Double latDouble = location.getLatitude();
+                latitude = latDouble.toString();
+                Double longDouble = location.getLongitude();
+                longitude = longDouble.toString();
+            }
+        }
+    }
+
+    public void setOtherLocation(){
+        //give user ability to set different location for item
+    }
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("Latitude","disable");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("Latitude","status");
+    }
+    @Override
+    public void onLocationChanged(Location location) {
+        Double latitudeDouble = location.getLatitude();
+        Double longitudeDouble = location.getLongitude();
+        latitude = latitudeDouble.toString();
+        longitude = longitudeDouble.toString();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_LOCATION:
+                int g = 0;
+                //Log.d(TAG,"Perm?: "+permissions.length+" -? "+grantResults.length);
+                for(String perm: permissions)
+                    //Log.d(TAG,"Perm: "+perm+" --> "+grantResults[g++]);
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    getLocationUpdates();
+                }
+                else {
+                    //Log.i(TAG, "Permission was not granted to access location");
+                    Toast.makeText(getApplicationContext(),"Permission was not granted to access location",Toast.LENGTH_LONG).show();
+                    finish();
+                }
+        }
     }
 
 

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class Item implements Serializable{
     int id;
-    String downloadURL,userID, name, brand, description, category, condition, size, price;
-    double latitude, longitude;
+    String downloadURL,userID, name, brand, description, category, condition, size, price,latitude, longitude;
+   // double latitude, longitude;
 
     ArrayList<String> otherImages;
 
@@ -36,11 +36,11 @@ public class Item implements Serializable{
         otherImages = new ArrayList<String>();
     }
 
-    public Item(int id, String downloadURL, String userID, String name, String brand, String description, String category, String condition, String size, String price, double latitude, double longitude){
+    public Item(int id, String downloadURL, String userID, String brand, String description, String category, String condition, String size, String price, String latitude, String longitude){
         this.downloadURL = downloadURL;
         this.id = id;
         this.userID = userID;
-        this.name = name;
+        //this.name = name;
         this.brand = brand;
         this.description = description;
         this.category = category;
@@ -133,21 +133,37 @@ public class Item implements Serializable{
         this.condition = condition;
     }
 
-    public double getLatitude() {
+//    public double getLatitude() {
+//        return latitude;
+//    }
+//
+//    public void setLatitude(double latitude) {
+//        this.latitude = latitude;
+//    }
+//
+//    public double getLongitude() {
+//        return longitude;
+//    }
+//
+//    public void setLongitude(double longitude) {
+//        this.longitude = longitude;
+//    }
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
+
 
     public void addImage(String imageName){
         otherImages.add(imageName);
