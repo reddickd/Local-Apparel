@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     //Onclick method when the user clicks the Create New Account Text

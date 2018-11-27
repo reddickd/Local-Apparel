@@ -345,7 +345,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent toFullItemPage = new Intent(context,SingleItemActivity.class);
-                    toFullItemPage.putExtra("SingleItem",item);
+                    toFullItemPage.putExtra("SingleItem", item);
                     startActivity(toFullItemPage);
                 }
             });

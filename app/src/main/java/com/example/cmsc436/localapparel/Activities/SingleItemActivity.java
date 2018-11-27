@@ -7,6 +7,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import android.Manifest;
 import android.content.Intent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import java.util.*;
@@ -68,13 +70,39 @@ public class SingleItemActivity extends AppCompatActivity {
     NOT YET FULLY IMPLEMENTED BUT ALL IT NEEDS TO DO IS GET THE ITEM OBJECT AND SET ALL THE TEXTVIEW WIDGETS
     that was sent from the markeplaceActivity.
      */
+
+    private String TAG = "SingleItemActivity";
+    private TextView name, brand, description, price;
+    private ImageView picOfItem;
+    StorageReference storeRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_item_page);
         Intent receivedIntent = getIntent();
-        Item item = (Item)receivedIntent.getSerializableExtra("SingleItemData");
+        Item item = (Item)receivedIntent.getSerializableExtra("SingleItem");
+        storeRef = FirebaseStorage.getInstance().getReference();
+        Log.i(TAG, "We've entered the view where we want to display the details of the item");
 
+        name = findViewById(R.id.name);
+        brand = findViewById(R.id.brand);
+        description = findViewById(R.id.description);
+        price = findViewById(R.id.price);
+        picOfItem = findViewById(R.id.detailDisplayPic);
+
+        storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                picOfItem.setImageBitmap(bmp);
+                Log.d("TEST", "downloaded picture");
+            }
+        });
+
+        name.setText("Seller: " + String.valueOf(item.getName()));
+        brand.setText(item.getBrand());
+        description.setText("Description of item: " + item.getDescription());
+        price.setText(item.getPrice());
 
     }
 

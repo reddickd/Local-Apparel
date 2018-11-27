@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
 import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
 import com.example.cmsc436.localapparel.Objects.User;
 import com.example.cmsc436.localapparel.R;
@@ -66,29 +65,28 @@ public class CreateUserActivity extends AppCompatActivity {
     }
 
     public void createUserPressed(View view) {
-        /// now we gotta figure out what to do with the information once the button is rpessed
-        // ie make sure he passwords match and the email address isnt used yet
-
+        // now we gotta figure out what to do with the information once the button is pressed
+        // i.e. make sure he passwords match and the email address isn't used yet
         final String email = emailField.getText().toString();
         final String password = passwordField.getText().toString();
         String verifyPassword = verifyPasswordField.getText().toString();
         final String phoneNum = phoneNumField.getText().toString();
 
-        //if no phone number was entered
-        if(phoneNum.trim().equals("")){
+        // if no phone number was entered
+        if(phoneNum.trim().equals("")) {
             Toast.makeText(CreateUserActivity.this, "Please enter your phone number.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //get profile picture
-        if(profileImageUri == null){
+        // get profile picture
+        if(profileImageUri == null) {
             Toast.makeText(CreateUserActivity.this, "Please select a picture.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //get users location
+        // get users location
         userLocation = getLocation();
-        if(userLocation == null){
+        if(userLocation == null) {
             Toast.makeText(CreateUserActivity.this, "Cannot get location", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -111,8 +109,11 @@ public class CreateUserActivity extends AppCompatActivity {
                                 FireBaseBackEnd backEnd  = new FireBaseBackEnd(fire);
                                 FirebaseUser user = mAuth.getCurrentUser();
 
-                                //creates a new user and puts them in the database
-                                User tempUser = new User(email,password, user.getUid(), phoneNum, userLocation.getLatitude(), userLocation.getLongitude());
+                                // creates a new user and puts them in the database
+                                User tempUser =
+                                        new User(email,password, user.getUid(), phoneNum,
+                                                userLocation.getLatitude(),
+                                                userLocation.getLongitude());
                                 backEnd.addUser(tempUser);
 
                                 backEnd.saveProfilePicture(profileImageUri, user.getUid()); //saves profile pic in database
@@ -120,10 +121,11 @@ public class CreateUserActivity extends AppCompatActivity {
                                 startActivity(new Intent(CreateUserActivity.this,
                                         MainPage.class));
                             } else {
+
                                 /* email may already be in use, password is not strong enough, or
                                 email address is not valid, so creation will fail. I'm still working
                                 out how to catch these errors individually, so that I can display
-                                the appropriate Toast message.*/
+                                the appropriate Toast message. */
                                 Log.w(TAG, "create user with email failed, email may already" +
                                         "be in use");
                                 Toast.makeText(CreateUserActivity.this, "Create user " +
@@ -136,33 +138,33 @@ public class CreateUserActivity extends AppCompatActivity {
         }
     }
 
-    //allows the user to select a photo from their gallery to display in the image view
+    // allows the user to select a photo from their gallery to display in the image view
     public void uploadProfilePicture(View view){
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent galleryIntent =
+                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
     }
 
-    //makes sure that we got back photo and sets the variabe profileImageUri to that photo so we can save it in the database
+    // makes sure that we got back photo and sets the variable profileImageUri to that photo so we
+    // can save it in the database
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             profileImageUri = data.getData();
             profilePicImagePreview.setImageURI(profileImageUri);
         }
     }
 
-    private Location getLocation(){
-        //get permission
+    private Location getLocation() {
+        // get permission
         if (ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  }, REQUEST_LOCATION_PERMISSION );
         }
         if (ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION   }, REQUEST_LOCATION_PERMISSION );
         }
-
         return mLocationManger.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
     }
 }
