@@ -57,4 +57,13 @@
         app:srcCompat="@android:color/background_light"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:id="@+id/send_message_from_item_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sendMessageFromItemPage"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="317dp"
+        android:onClick="sendMessageToBuyItem"/>
 </android.support.constraint.ConstraintLayout>

@@ -106,5 +106,9 @@ public class SingleItemActivity extends AppCompatActivity {
 
     }
 
+    public void sendMessageToBuyItem(View view){
+        
+    }
+
 
 }

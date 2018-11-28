@@ -40,4 +40,5 @@
         <item>L</item>
         <item>XL</item>
     </string-array>
+    <string name="sendMessageFromItemPage">Send Message</string>
 </resources>
