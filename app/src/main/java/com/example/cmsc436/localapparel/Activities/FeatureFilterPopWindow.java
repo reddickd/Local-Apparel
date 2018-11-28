@@ -61,7 +61,7 @@ public class FeatureFilterPopWindow extends AppCompatActivity{
         getWindow().setLayout((int)(width*.8),(int)(height*.7));
 
         spin = findViewById(R.id.spinner1);
-        String[] items = new String[]{"Top", "Pants", "Accessories","Socks","Shorts"};
+        String[] items = new String[]{"Jacket", "Coat","Vest","Long Sleeve","Hoodie","Polo","Sweater", "Accessories","Denim","Shorts","Trousers"};
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spin.setAdapter(adapter);
 
