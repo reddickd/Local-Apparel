@@ -5,6 +5,7 @@ import com.example.cmsc436.localapparel.Objects.User;
 import com.example.cmsc436.localapparel.R;
 import com.google.firebase.database.FirebaseDatabase;
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.widget.ArrayAdapter;
 import android.view.ViewGroup;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,6 +63,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
 
 import com.example.cmsc436.localapparel.R;
 
@@ -107,7 +110,29 @@ public class SingleItemActivity extends AppCompatActivity {
     }
 
     public void sendMessageToBuyItem(View view){
-        
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Send message to " + "This should be sellers email");
+
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                // Do something with value!
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 
 
