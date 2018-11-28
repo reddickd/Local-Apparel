@@ -124,7 +124,23 @@ public class IndividualChat extends AppCompatActivity {
             return;
         }
 
-        Message newMessage = new Message(user.getUid(), messageToBeSent);
+        int hours, minutes;
+        String amOrPM, timeStamp = null;
+
+        hours = java.time.LocalTime.now().getHour();
+        if(hours > 12){
+            hours = hours - 12;
+            amOrPM = "PM";
+        }else{
+            amOrPM = "AM";
+        }
+        minutes = java.time.LocalTime.now().getMinute();
+
+        timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
+
+
+
+        Message newMessage = new Message(user.getUid(), messageToBeSent, timeStamp);
 
         User otherUser = null;
         if(currentChat.getSender().equals(user.getUid())){
@@ -266,9 +282,7 @@ public class IndividualChat extends AppCompatActivity {
 
         void bind(Message message) {
             messageText.setText(message.getMessage());
-
-            // Format the stored timestamp into a readable String using method.
-            //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));
+            timeText.setText(message.getTimeStamp());
         }
     }
 
@@ -287,6 +301,7 @@ public class IndividualChat extends AppCompatActivity {
 
         void bind(Message message) {
             messageText.setText(message.getMessage());
+            timeText.setText(message.getTimeStamp());
 
             // Format the stored timestamp into a readable String using method.
             //timeText.setText(Utils.formatDateTime(message.getCreatedAt()));

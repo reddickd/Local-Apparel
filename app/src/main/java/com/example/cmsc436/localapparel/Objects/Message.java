@@ -9,10 +9,12 @@ public class Message implements Serializable {
 
     private String sender;
     private String message;
+    private String timeStamp;
 
-    public Message(String sender, String message){
+    public Message(String sender, String message, String timeStamp){
         this.sender = sender;
         this.message = message;
+        this.timeStamp = timeStamp;
     }
 
     public Message(){}
@@ -25,5 +27,6 @@ public class Message implements Serializable {
         return message;
     }
 
+    public String getTimeStamp() { return  timeStamp; }
 
 }
