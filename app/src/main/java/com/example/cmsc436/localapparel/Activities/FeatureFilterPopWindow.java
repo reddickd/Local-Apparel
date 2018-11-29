@@ -147,10 +147,11 @@ public class FeatureFilterPopWindow extends AppCompatActivity implements OnItemS
 
         categoryPicked.add(item);
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        if(item != "")
+            Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
-       
+
     }
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();

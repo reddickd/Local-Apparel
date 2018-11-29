@@ -12,7 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import java.util.*;
-
+import java.math.*;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.widget.ArrayAdapter;
 import android.view.ViewGroup;
@@ -66,6 +66,9 @@ public class MarketPlaceActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storeRef;
     ArrayList<Item> listingItems;
+    User currentUser;
+    FirebaseAuth mAuth;
+    FirebaseUser firebaseUser;
     ListView listView;
     CustomAdapter adapter;
     private DrawerLayout mDrayerlayout;
@@ -80,6 +83,9 @@ public class MarketPlaceActivity extends AppCompatActivity {
         fire = FirebaseDatabase.getInstance().getReference();
         storeRef = FirebaseStorage.getInstance().getReference();
         listingItems = new ArrayList<Item>();
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+
         //Whenever a new item is added, or changes in item properties
         fire.child("items").addValueEventListener(new ValueEventListener() {
             @Override
@@ -94,6 +100,25 @@ public class MarketPlaceActivity extends AppCompatActivity {
                 listView = (ListView) findViewById(R.id.listItem);
                 adapter = new CustomAdapter(MarketPlaceActivity.this, R.layout.customlistinglayout, listingItems);
                 listView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        fire.child("users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+
+                for (DataSnapshot child : children) {
+                    User user = child.getValue(User.class);
+                    if(user.getUid().equals(firebaseUser.getUid())){
+                        currentUser = user;
+                    }
+                }
 
             }
 
@@ -168,7 +193,10 @@ public class MarketPlaceActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FeatureFilterPopWindow.class);
         startActivityForResult(intent, 2);
     }
-
+    public void showResetButton(View view){
+        CustomAdapter adapter = new CustomAdapter(this, R.layout.customlistinglayout, listingItems);
+        listView.setAdapter(adapter);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -216,13 +244,38 @@ public class MarketPlaceActivity extends AppCompatActivity {
             }
             */
         radius = data.getStringExtra("radius");
-        /*
-        if (!radius.isEmpty()) {
-            for (Item element : copiedOverList) {
-
+        if (radius != null && aCategoryClearedList == false) {
+            double radiusVal = Double.parseDouble(radius);
+            noFilterOptionClicked = false;
+            if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
+                for (Item element:copiedOverList) {
+                    double miles = Math.hypot(currentUser.getLatitude()-Double.parseDouble(element.getLatitude())
+                            ,currentUser.getLongitude()-Double.parseDouble(element.getLatitude()));
+                    if ( miles <= radiusVal){
+                        //currentUser.getLatitude();
+                        //currentUser.getLongitude();
+                        tempNewList.add(element);
+                    }
+                }
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            } else {
+                for (Item element : tempNewList) {
+                    double miles = Math.hypot(currentUser.getLatitude()-Double.parseDouble(element.getLatitude())
+                            ,currentUser.getLongitude()-Double.parseDouble(element.getLongitude()));
+                    if (miles > radiusVal){
+                        //currentUser.getLatitude();
+                        //currentUser.getLongitude();
+                        tempNewList.remove(element);
+                    }
+                }
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
             }
         }
-        */
+
 
         lowRange = data.getStringExtra("lowRange");
         highRange = data.getStringExtra("highRange");
@@ -362,18 +415,16 @@ public class MarketPlaceActivity extends AppCompatActivity {
 
         }
         if(tempNewList.isEmpty() && noFilterOptionClicked == false){
-            Toast.makeText(MarketPlaceActivity.this, "THERE ARE NO ITEMS OF THIS KIND BOIIIII!!!!! SO GET THE FUCK OUTA HERE BITCH",
+            Toast.makeText(MarketPlaceActivity.this, "There are no items under these conditions.",
                     Toast.LENGTH_LONG).show();
             return copiedOverList;
         }
         if(noFilterOptionClicked == true) {// no filter option was clicked
-            Toast.makeText(MarketPlaceActivity.this, "NOOOOOOOO!!!",
-                    Toast.LENGTH_LONG).show();
+           // Toast.makeText(MarketPlaceActivity.this, "NOOOOOOOO!!!", Toast.LENGTH_LONG).show();
             return copiedOverList;
         }
         //Log.d("Hi","The Item list brand"+ tempNewList.get(0).getBrand());
-        Toast.makeText(MarketPlaceActivity.this, "HERE ARE THE CURRENT ITEMS YOU REQUESTED BISH!!!",
-                Toast.LENGTH_LONG).show();
+        //Toast.makeText(MarketPlaceActivity.this, "HERE ARE THE CURRENT ITEMS YOU REQUESTED!!!",Toast.LENGTH_LONG).show();
         return tempNewList;
     }
 

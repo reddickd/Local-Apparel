@@ -19,6 +19,8 @@
     <string name="checkL">L</string>
     <string name="checkXL">XL</string>
     <string name="size">Size</string>
+    <string name="size2">Size</string>
+    <string name="dash">-</string>
     <string name="category">Category</string>
     <string name="condition">Condition</string>
     <string name="conditionNew">new</string>
@@ -26,6 +28,8 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="goToMarketPlace">Go To Marketplace</string>
+    <string name="moneySymbol">$</string>
+    <string name="reset">Reset</string>
     <string-array name="categories">
         <item>Shirt</item>
         <item>Pants</item>
