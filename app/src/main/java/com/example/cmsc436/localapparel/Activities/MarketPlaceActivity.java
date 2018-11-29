@@ -60,29 +60,27 @@ import android.support.v4.widget.DrawerLayout;
 //import android.support.v7.widget.ActionBarDrawerToggle;
 
 public class MarketPlaceActivity extends AppCompatActivity {
-    TextView textViews,textViews2;
+    TextView textViews, textViews2;
     DatabaseReference fire;
     FireBaseBackEnd backEnd;
     FirebaseStorage storage;
     StorageReference storeRef;
-    List<Item> listingItems;
+    ArrayList<Item> listingItems;
     ListView listView;
     CustomAdapter adapter;
     private DrawerLayout mDrayerlayout;
     private ActionBarDrawerToggle mToggle;
 
 
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.market_place);
         backEnd = new FireBaseBackEnd(FirebaseDatabase.getInstance());
         fire = FirebaseDatabase.getInstance().getReference();
         storeRef = FirebaseStorage.getInstance().getReference();
         listingItems = new ArrayList<Item>();
-
+        //Whenever a new item is added, or changes in item properties
         fire.child("items").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,16 +91,10 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     listingItems.add(item);
                 }
                 //ListView Custom Adapter
-                listView = (ListView)findViewById(R.id.listItem);
-                //THIS HERE BELOW WAS A DUMMY TEST TO SEE IF MY FUNCTIONS WORK, JUST NEED TO ASSIGN LISTINGITEMS THE CORRECT ITEMS ARRAYLIST
-
-                //listingItems.add(new Item(54,"Gucci","UserID", "","","","","",0,0,0));
-                //listingItems.add(new Item(60,"LV","USERID"));
-                //listingItems.add(new Item(64,"Prada","USERID"));
-
-                adapter = new CustomAdapter(MarketPlaceActivity.this,R.layout.customlistinglayout,listingItems);
+                listView = (ListView) findViewById(R.id.listItem);
+                adapter = new CustomAdapter(MarketPlaceActivity.this, R.layout.customlistinglayout, listingItems);
                 listView.setAdapter(adapter);
-                //Button popUpB = (Button) findViewById(R.id.pop_window);
+
             }
 
             @Override
@@ -127,10 +119,6 @@ public class MarketPlaceActivity extends AppCompatActivity {
         //listView = (ListView)findViewById(R.id.listItem);
         //THIS HERE BELOW WAS A DUMMY TEST TO SEE IF MY FUNCTIONS WORK, JUST NEED TO ASSIGN LISTINGITEMS THE CORRECT ITEMS ARRAYLIST
 
-        //listingItems.add(new Item(54,"Gucci","UserID", "","","","","",0,0,0));
-        //listingItems.add(new Item(60,"LV","USERID"));
-        //listingItems.add(new Item(64,"Prada","USERID"));
-
         //adapter = new CustomAdapter(this,R.layout.customlistinglayout,listingItems);
         //listView.setAdapter(adapter);
         //Button popUpB = (Button) findViewById(R.id.pop_window);
@@ -140,60 +128,84 @@ public class MarketPlaceActivity extends AppCompatActivity {
     //Attempt to create Search Bar for on text submit and text change, needs to implement custom filter function
     // I need help with this.
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu,menu);
+        inflater.inflate(R.menu.menu, menu);
         MenuItem item = menu.findItem(R.id.menuSearch);
-        SearchView searchView = (SearchView)item.getActionView();
+        SearchView searchView = (SearchView) item.getActionView();
 
-
-        //control enter
+        //Submit enter text input
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                return false;
+                ArrayList<Item> tempList = new ArrayList<Item>();
+                if (query.length() != 0) {
+                    for (Item element : listingItems) {
+                        if (element.getName().contains(query)) {
+                            tempList.add(element);
+                        }
+                    }
+                    adapter = new CustomAdapter(MarketPlaceActivity.this, R.layout.customlistinglayout, tempList);
+                    listView.setAdapter(adapter);
+                } else {
+                    adapter = new CustomAdapter(MarketPlaceActivity.this, R.layout.customlistinglayout, listingItems);
+                    listView.setAdapter(adapter);
+                }
+                return false;//maybe false
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
                 return false;
             }
         });
-        return super.onCreateOptionsMenu(menu);
+        //return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     //Filter Button is utilized ONLY IF NAVIGATION BAR IS NOT IN PLACE. I implemented two approaches
-    public void showFilterOptionButton(View view){
-        Intent intent = new Intent(this,FeatureFilterPopWindow.class);
+    public void showFilterOptionButton(View view) {
+        Intent intent = new Intent(this, FeatureFilterPopWindow.class);
         startActivityForResult(intent, 2);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 2 && resultCode == RESULT_OK){
-            // listingItems = filterItemList(data, listingItems);
-            //CustomAdapter adapter = new CustomAdapter(this,R.layout.customlistinglayout,listingItems);
-            //listView.setAdapter(adapter);
-
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            ArrayList<Item> tempItemsList = new ArrayList<Item>();
+            tempItemsList = filterItemList(data, listingItems);
+            CustomAdapter adapter = new CustomAdapter(this, R.layout.customlistinglayout, tempItemsList);
+            listView.setAdapter(adapter);
+            Log.d("Hi","Went here");
         }
     }
-    /*
-        // NEED TO COMMENT OUT ONCE THE ITEM CLASS HAS ALL THE NECESSARY FIELDS AND GET FUNCTIONS
-        public ArrayList<Item> filterItemList(Intent data, ArrayList<Item>copiedOverList){
-            String brand,city,lowRange,highRange, radius,size;
 
 
-            brand = data.getStringExtra("brand");
-            if(!brand.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getBrand() != brand){
-                        copiedOverList.remove(element);
-                    }
+    public ArrayList<Item> filterItemList(Intent data, ArrayList<Item> copiedOverList) {
+        ArrayList<Item> tempNewList = new ArrayList<Item>();
+
+        String brand, city, lowRange, highRange, radius, size;
+        Boolean aCategoryClearedList = false;
+        Boolean noFilterOptionClicked = true;
+        brand = data.getStringExtra("brand");
+
+        if (!brand.isEmpty()) {
+            noFilterOptionClicked = false;
+            Log.d("Hi","Reached Brand Section");
+            for (Item element : copiedOverList) {
+                if (element.getBrand().equals(brand)) {
+                    //Log.d("Hi",element.getBrand().equals(brand)+element.getBrand()+" "+brand+" ");
+                    tempNewList.add(element);
                 }
+
             }
+            if(tempNewList.isEmpty()){
+                aCategoryClearedList = true;
+            }
+        }
+        // Log.d("Hi","The Item list brand"+ tempNewList.get(0).getBrand());
+            /*
             city = data.getStringExtra("city");
             if(!city.isEmpty()){
                 for(Item element: copiedOverList){
@@ -202,117 +214,195 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     }
                 }
             }
-            radius = data.getStringExtra("radius");
-            if(!radius.isEmpty()){
-                for(Item element: copiedOverList){
+            */
+        radius = data.getStringExtra("radius");
+        /*
+        if (!radius.isEmpty()) {
+            for (Item element : copiedOverList) {
 
-                }
             }
+        }
+        */
 
-            lowRange = data.getStringExtra("lowRange");
-            highRange = data.getStringExtra("highRange");
-            if(!lowRange.isEmpty() && !highRange.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getPrice() < lowRange || element.getPrice() > highRange){
-                        copiedOverList.remove(element);
+        lowRange = data.getStringExtra("lowRange");
+        highRange = data.getStringExtra("highRange");
+        if (!lowRange.isEmpty() && !highRange.isEmpty() && aCategoryClearedList == false) {
+            noFilterOptionClicked = false;
+            Log.d("Hi","REACHED THE RANGE SECTION");
+            if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
+                for (Item element : copiedOverList) {
+                    if (Integer.parseInt(element.getPrice()) >= Integer.parseInt(lowRange)
+                            && Integer.parseInt(element.getPrice()) <= Integer.parseInt(highRange)) {
+                        tempNewList.add(element);
                     }
                 }
+                if(tempNewList.isEmpty()){
+                    aCategoryClearedList = true;
+                }
+            } else { //Already items in temp list
+                for (Item element : tempNewList) {
+                    if (Integer.parseInt(element.getPrice()) < Integer.parseInt(lowRange)
+                            || Integer.parseInt(element.getPrice()) > Integer.parseInt(highRange)) {
+                        tempNewList.remove(element);
+                    }
+                }
+                if(tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            }
+        }
+
+        //String smallSize = data.getStringExtra("checkS");
+        //String mediumSize = data.getStringExtra("checkM");
+        //String largeSize = data.getStringExtra("checkL");
+        //String xlargeSize = data.getStringExtra("checkXL");
+        ArrayList<String> listSizes = new ArrayList<String>();
+        listSizes = data.getStringArrayListExtra("size");
+
+        //if(!smallSize.isEmpty())
+        //    listSizes.add(smallSize);
+        //if(!mediumSize.isEmpty())
+        //    listSizes.add(mediumSize);
+        //if(!largeSize.isEmpty())
+        //    listSizes.add(largeSize);
+        //if(!xlargeSize.isEmpty())
+        //    listSizes.add(xlargeSize);
+
+
+        //Log.d("Hi","size of list" + String.valueOf(listSizes.size()));
+
+        if (listSizes != null && aCategoryClearedList == false) {
+            noFilterOptionClicked = false;
+            Log.d("Hi","REACHed CheckSize");
+            if (!tempNewList.isEmpty()) {
+                for (Item element : tempNewList) {
+                    if (!listSizes.contains(element.getSize())) {
+                        tempNewList.remove(element);
+                    }
+                }
+
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            } else { //Nothing has been adding to temp list
+                for (Item element : copiedOverList) {
+                    if (listSizes.contains(element.getSize())) {
+                        tempNewList.add(element);
+                    }
+                }
+                if(tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            }
+        }
+        //Log.d("Hi","NewUsed");
+        String conditionNew = data.getStringExtra("new");
+        //Log.d("Hi","Hello" + conditionNew);
+        String conditionUsed = data.getStringExtra("used");
+        //Log.d("Hi","NewUsed3333333");
+
+        ArrayList<String> conditionList = new ArrayList<String>();
+        conditionList.clear();
+        //Log.d("Hi","NewUsed4444");
+        if(conditionNew != null)
+            conditionList.add(conditionNew);
+        //Log.d("Hi","NewUsed666666");
+        if(conditionUsed != null)
+            conditionList.add(conditionUsed);
+        // Log.d("Hi","Condition1: " + conditionUsed);
+        //Log.d("Hi","Condition1: " + conditionNew);
+        if (!conditionList.isEmpty() && aCategoryClearedList == false) {
+            noFilterOptionClicked = false;
+            if (tempNewList.isEmpty()) {
+                for (Item element : copiedOverList) {
+                    if (conditionList.contains(element.getCondition())) {
+                        Log.d("Hi","ConditionLoop: " + conditionUsed);
+                        Log.d("Hi","ConditionLoop: " + conditionNew);
+                        tempNewList.add(element);
+                    }
+                }
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            } else {
+                for (Item element : tempNewList) {
+                    if (!conditionList.contains(element.getCondition())) {
+                        tempNewList.remove(element);
+                    }
+                }
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            }
+        }
+        //add reset button!!!
+        ArrayList<String> categoryList = data.getExtras().getStringArrayList("category");
+        if (categoryList != null && categoryList.size() != 0 && aCategoryClearedList == false) {
+            noFilterOptionClicked = false;
+            Log.d("Hi","List of item:" + categoryList.get(0));
+            if (tempNewList.isEmpty()) { // Nothing has been added to the list
+                for (Item element : copiedOverList) {
+                    if (categoryList.contains(element.getCategory())) {
+                        tempNewList.add(element);
+                    }
+                }
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            } else { //Temp list is not empty
+                for (Item element : tempNewList) {
+                    if (!categoryList.contains(element.getCategory())) {
+                        tempNewList.remove(element);
+                    }
+                }
+                if (tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
             }
 
-            String smallSize = data.getStringExtra("checkS");
-            if(!smallSize.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getSize() != smallSize){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-
-            String mediumSize = data.getStringExtra("checkM");
-            if(!mediumSize.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getSize() != mediumSize){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-            String largeSize = data.getStringExtra("checkL");
-            if(!largeSize.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getSize() != largeSize){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-            String xlargeSize = data.getStringExtra("checkXL");
-            if(!smallSize.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getSize() != xlargeSize){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-
-            String conditionNew = data.getStringExtra("new");
-            if(!conditionNew.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getCondition() != conditionNew){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-            //data.getStringExtra("used");
-
-            String conditionUsed = data.getStringExtra("used");
-            if(!conditionUsed.isEmpty()){
-                for(Item element: copiedOverList){
-                    if(element.getCondition() != conditionUsed){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-            ArrayList<String> categoryList = data.getExtras().getStringArrayList("category");
-            if(!data.getExtras().getStringArrayList("category").isEmpty()){
-                for(Item element: copiedOverList){
-                    if(!element.getCategory().contains(categoryList)){
-                        copiedOverList.remove(element);
-                    }
-                }
-            }
-
-            Log.d("TAG", brand);
-
+        }
+        if(tempNewList.isEmpty() && noFilterOptionClicked == false){
+            Toast.makeText(MarketPlaceActivity.this, "THERE ARE NO ITEMS OF THIS KIND BOIIIII!!!!! SO GET THE FUCK OUTA HERE BITCH",
+                    Toast.LENGTH_LONG).show();
             return copiedOverList;
         }
-    */
+        if(noFilterOptionClicked == true) {// no filter option was clicked
+            Toast.makeText(MarketPlaceActivity.this, "NOOOOOOOO!!!",
+                    Toast.LENGTH_LONG).show();
+            return copiedOverList;
+        }
+        //Log.d("Hi","The Item list brand"+ tempNewList.get(0).getBrand());
+        Toast.makeText(MarketPlaceActivity.this, "HERE ARE THE CURRENT ITEMS YOU REQUESTED BISH!!!",
+                Toast.LENGTH_LONG).show();
+        return tempNewList;
+    }
+
     //Custom Adapter for List View
-    class CustomAdapter extends ArrayAdapter<Item>{
+    class CustomAdapter extends ArrayAdapter<Item> {
         List<Item> itemList;
         Context context;
         int resource;
 
-        public CustomAdapter(Context context,int resource, List<Item> itemList){
-            super(context,resource,itemList);
-            this.context=context;
+        public CustomAdapter(Context context, int resource, List<Item> itemList) {
+            super(context, resource, itemList);
+            this.context = context;
             this.resource = resource;
             this.itemList = itemList;
         }
+
         //might take out
-        public int getCount(){
+        public int getCount() {
             return itemList.size();
         }
-        // @Override
-        //public void getFilter(String text){
 
-        //}
-        public long getItemId(int i){
+        public long getItemId(int i) {
             return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater = LayoutInflater.from(context);
-            View view = layoutInflater.inflate(resource,null,false);
+            View view = layoutInflater.inflate(resource, null, false);
             final ImageView imageView = view.findViewById(R.id.imageView);
             TextView name = view.findViewById(R.id.name);
             TextView size = view.findViewById(R.id.size);
@@ -328,7 +418,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
             price.setText(item.getPrice());
             condition.setText(item.getCondition());
 
-            storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+            storeRef.child("images").child(item.getDownloadURL()).getBytes(1024 * 1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -336,15 +426,15 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     Log.d("TEST", "downloaded picture");
                 }
             });
-            //imageView.setImageURI();
+
 
             // GO TO ANOTHER ACTIVITY FOR FULL DETAIL OF THE ITEM CLICKED, SET A ONCLICK LISTENER
             // FOR THE IMAGEVIEW AND SENT THE CONTENTS OF ITEM OBJECT TO THE NEW ACTIVITY.
             // THIS MIGHT BE BROKEN GOING TO THE NEXT ACTIVITY. MIGHT BE A SMALL FIX
-            imageView.setOnClickListener(new View.OnClickListener(){
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent toFullItemPage = new Intent(context,SingleItemActivity.class);
+                    Intent toFullItemPage = new Intent(context, SingleItemActivity.class);
                     toFullItemPage.putExtra("SingleItem", item);
                     startActivity(toFullItemPage);
                 }
@@ -353,7 +443,6 @@ public class MarketPlaceActivity extends AppCompatActivity {
             return view;
         }
     }
-
 
 
 }
