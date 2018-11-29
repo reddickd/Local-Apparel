@@ -13,8 +13,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import java.util.*;
-
+import com.example.cmsc436.localapparel.Objects.Chat;
+import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
+import com.example.cmsc436.localapparel.Objects.Item;
+import com.example.cmsc436.localapparel.Objects.Message;
+import com.example.cmsc436.localapparel.Objects.User;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
 import android.view.ViewGroup;
 import android.support.v7.app.AppCompatActivity;
@@ -78,20 +84,61 @@ public class SingleItemActivity extends AppCompatActivity {
     private TextView name, brand, description, price;
     private ImageView picOfItem;
     StorageReference storeRef;
+    DatabaseReference ref;
+    List<User> allUsers;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+    FireBaseBackEnd backEnd;
+    User temp;
+    Item item;
+    User seller;
+    List<Chat> chatList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_item_page);
         Intent receivedIntent = getIntent();
-        Item item = (Item)receivedIntent.getSerializableExtra("SingleItem");
+        item = (Item)receivedIntent.getSerializableExtra("SingleItem");
         storeRef = FirebaseStorage.getInstance().getReference();
+        backEnd = new FireBaseBackEnd(FirebaseDatabase.getInstance());
         Log.i(TAG, "We've entered the view where we want to display the details of the item");
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
         name = findViewById(R.id.name);
         brand = findViewById(R.id.brand);
         description = findViewById(R.id.description);
         price = findViewById(R.id.price);
         picOfItem = findViewById(R.id.detailDisplayPic);
+
+        allUsers = new ArrayList<User>();
+        FirebaseUser seller;
+
+        ref.child("users").addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                allUsers.clear();
+                for (DataSnapshot child : children) {
+                    User user = child.getValue(User.class);
+                    allUsers.add(user);
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
         storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
             @Override
@@ -112,7 +159,15 @@ public class SingleItemActivity extends AppCompatActivity {
     public void sendMessageToBuyItem(View view){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle("Send message to " + "This should be sellers email");
+        for(User u : allUsers){
+            if(u.getUid().equals(item.getUserID())){
+                seller = u;
+            }
+            if (u.getUid().equals(user.getUid())) {
+                temp = u;
+            }
+        }
+        alert.setTitle("Send message to " + seller.getEmail());
 
 
         // Set an EditText view to get user input
@@ -121,6 +176,34 @@ public class SingleItemActivity extends AppCompatActivity {
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                //make theres text in the box
+
+                int hours, minutes;
+                String amOrPM, timeStamp = null;
+
+                hours = java.time.LocalTime.now().getHour();
+                if(hours > 12){
+                    hours = hours - 12;
+                    amOrPM = "PM";
+                }else{
+                    amOrPM = "AM";
+                }
+                minutes = java.time.LocalTime.now().getMinute();
+
+                timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
+
+                Message m = new Message(user.getUid(), input.getText().toString(), timeStamp);
+                List<Message> messages = new ArrayList<Message>();
+                messages.add(m);
+                Chat newChat = new Chat(user.getUid(), seller.getUid(), item.getName());
+
+                newChat.addMessage(m);
+
+                temp.addChat(newChat);
+                seller.addChat(newChat);
+
+                backEnd.addUser(temp);
+                backEnd.addUser(seller);
 
                 // Do something with value!
             }
