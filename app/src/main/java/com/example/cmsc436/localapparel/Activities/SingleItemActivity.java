@@ -129,6 +129,30 @@ public class SingleItemActivity extends AppCompatActivity {
 
                 }
 
+                User tempSeller = null;
+                for(User u : allUsers){
+                    if(u.getUid().equals(item.getUserID())){
+                        tempSeller = u;
+                    }
+                    if (u.getUid().equals(user.getUid())) {
+                        temp = u;
+                    }
+                }
+
+                storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        picOfItem.setImageBitmap(bmp);
+                        Log.d("TEST", "downloaded picture");
+                    }
+                });
+
+                name.setText("Seller: " + tempSeller.getEmail());
+                brand.setText(item.getBrand());
+                description.setText("Description of item: " + item.getDescription());
+                price.setText(item.getPrice());
+
 
             }
 
@@ -139,36 +163,21 @@ public class SingleItemActivity extends AppCompatActivity {
         });
 
 
-
-        storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                picOfItem.setImageBitmap(bmp);
-                Log.d("TEST", "downloaded picture");
-            }
-        });
-
-        name.setText("Seller: " + String.valueOf(item.getName()));
-        brand.setText(item.getBrand());
-        description.setText("Description of item: " + item.getDescription());
-        price.setText(item.getPrice());
-
     }
 
     public void sendMessageToBuyItem(View view){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
+        alert.setTitle("Send message to " + seller.getEmail());
+
         for(User u : allUsers){
             if(u.getUid().equals(item.getUserID())){
-                seller = u;
+                this.seller = u;
             }
             if (u.getUid().equals(user.getUid())) {
                 temp = u;
             }
         }
-        alert.setTitle("Send message to " + seller.getEmail());
-
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
