@@ -75,5 +75,17 @@ public class User {
     public void incrementNumItems(){
         this.numItems++;
     }
+    public double getLatitude(){
+        return this.userLat;
+    }
+    public double getLongitude(){
+        return this.userLong;
+    }
+    public void setLatitude(double lat){
+        this.userLat = lat;
+    }
+    public void setLongitude(double longitude){
+        this.userLong = longitude;
+    }
 
 }
