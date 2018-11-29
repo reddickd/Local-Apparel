@@ -4,10 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MessageListActivity">
+    android:background="@drawable/soft_grad"
+
+    tools:context=".Activities.MessageListActivity"
+    >
 
 
     <ListView
+        android:background="@drawable/soft_grad"
         android:id="@+id/messageListItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
