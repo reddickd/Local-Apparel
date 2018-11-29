@@ -165,59 +165,64 @@ public class SingleItemActivity extends AppCompatActivity {
 
     }
 
-    public void sendMessageToBuyItem(View view){
+    public void sendMessageToBuyItem(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle("Send message to " + seller.getEmail());
-
-        for(User u : allUsers){
-            if(u.getUid().equals(item.getUserID())){
+        for (User u : allUsers) {
+            if (u.getUid().equals(item.getUserID())) {
                 this.seller = u;
             }
             if (u.getUid().equals(user.getUid())) {
                 temp = u;
             }
         }
+        /* The current user is trying to message themself...*/
+        if (this.seller.getUid().equals(temp.getUid())) {
+            alert.setTitle("This is your item! You cannot message yourself...");
+        }
+        /* The current user is trying to message the seller */
+        else {
+            alert.setTitle("Send message to " + seller.getEmail());
 
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
+            // Set an EditText view to get user input
+            final EditText input = new EditText(this);
+            alert.setView(input);
 
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //make theres text in the box
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //make theres text in the box
 
-                int hours, minutes;
-                String amOrPM, timeStamp = null;
+                    int hours, minutes;
+                    String amOrPM, timeStamp = null;
 
-                hours = java.time.LocalTime.now().getHour();
-                if(hours > 12){
-                    hours = hours - 12;
-                    amOrPM = "PM";
-                }else{
-                    amOrPM = "AM";
+                    hours = java.time.LocalTime.now().getHour();
+                    if (hours > 12) {
+                        hours = hours - 12;
+                        amOrPM = "PM";
+                    } else {
+                        amOrPM = "AM";
+                    }
+                    minutes = java.time.LocalTime.now().getMinute();
+
+                    timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
+
+                    Message m = new Message(user.getUid(), input.getText().toString(), timeStamp);
+                    List<Message> messages = new ArrayList<Message>();
+                    messages.add(m);
+                    Chat newChat = new Chat(user.getUid(), seller.getUid(), item.getName());
+
+                    newChat.addMessage(m);
+
+                    temp.addChat(newChat);
+                    seller.addChat(newChat);
+
+                    backEnd.addUser(temp);
+                    backEnd.addUser(seller);
+
+                    // Do something with value!
                 }
-                minutes = java.time.LocalTime.now().getMinute();
-
-                timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
-
-                Message m = new Message(user.getUid(), input.getText().toString(), timeStamp);
-                List<Message> messages = new ArrayList<Message>();
-                messages.add(m);
-                Chat newChat = new Chat(user.getUid(), seller.getUid(), item.getName());
-
-                newChat.addMessage(m);
-
-                temp.addChat(newChat);
-                seller.addChat(newChat);
-
-                backEnd.addUser(temp);
-                backEnd.addUser(seller);
-
-                // Do something with value!
-            }
-        });
-
+            });
+        }
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Canceled.
@@ -226,6 +231,4 @@ public class SingleItemActivity extends AppCompatActivity {
 
         alert.show();
     }
-
-
 }
