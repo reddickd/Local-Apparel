@@ -70,6 +70,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
     FireBaseBackEnd backEnd;
     FirebaseStorage storage;
     StorageReference storeRef;
+    Integer databaseItemCount;
     Button sendMessageButton, listItemButton;
     List<User> allUsers;
     FirebaseAuth mAuth;
@@ -92,6 +93,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         backEnd = new FireBaseBackEnd(fire);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        databaseItemCount = backEnd.getItemCount();
 
 
         sendMessageButton = (Button) findViewById(R.id.send_message);
@@ -224,10 +226,13 @@ public class MainPage extends AppCompatActivity implements LocationListener{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] byteData = baos.toByteArray();
-            currNonFirebaseUser = backEnd.getCurrentUser(user.getUid());
-            currNonFirebaseUser.incrementNumItems();
-            Integer numItems = currNonFirebaseUser.getnumItems();
-            UploadTask uploadTask = storeRef.child("images").child(user.getUid()).child(numItems.toString()).putBytes(byteData);
+//            currNonFirebaseUser = backEnd.getCurrentUser(user.getUid());
+//            currNonFirebaseUser.incrementNumItems();
+//            Integer numItems = currNonFirebaseUser.getnumItems();
+            //Integer itemCount = backEnd.getItemCount();
+            String storageEntry = user.getUid() +databaseItemCount;
+            //UploadTask uploadTask = storeRef.child("images").child(user.getUid()).child(numItems.toString()).putBytes(byteData);
+            UploadTask uploadTask = storeRef.child("images").child(storageEntry).putBytes(byteData);
             //uploadTask.
             if(uploadTask.isComplete()){
 
