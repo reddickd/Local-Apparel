@@ -73,6 +73,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
     CustomAdapter adapter;
     private DrawerLayout mDrayerlayout;
     private ActionBarDrawerToggle mToggle;
+    SearchView search;
 
 
     @Override
@@ -85,6 +86,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
         listingItems = new ArrayList<Item>();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
+        search = findViewById(R.id.searchb);
 
         //Whenever a new item is added, or changes in item properties
         fire.child("items").addValueEventListener(new ValueEventListener() {
@@ -128,7 +130,30 @@ public class MarketPlaceActivity extends AppCompatActivity {
             }
         });
 
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                ArrayList<Item> tempList = new ArrayList<Item>();
+                if (query.length() != 0) {
+                    for (Item element : listingItems) {
+                        if (element.getName().contains(query)) {
+                            tempList.add(element);
+                        }
+                    }
+                    adapter = new CustomAdapter(MarketPlaceActivity.this, R.layout.customlistinglayout, tempList);
+                    listView.setAdapter(adapter);
+                } else {
+                    adapter = new CustomAdapter(MarketPlaceActivity.this, R.layout.customlistinglayout, listingItems);
+                    listView.setAdapter(adapter);
+                }
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 /*
         // DRAWER CODE PART IF YOU WANT TO USE COMMENT THIS OUT ADD IN THE DRAWER ID INTO THE LAYOUT FILE
         //Drawer Navigational Drawer
