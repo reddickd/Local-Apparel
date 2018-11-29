@@ -78,12 +78,12 @@ public class FireBaseBackEnd {
         return null;
     }
 
-    public void listItem(String item, String url, String userID, String brand, String description,String category,String condition,String size, String price, String latitude, String longitude){
+    public void listItem(String item, String url, String name, String userID, String brand, String description,String category,String condition,String size, String price, String latitude, String longitude){
 
         if(ref.child("items") != null){
             id = getItemCount();
         }
-       ref.child("items").child(item).setValue(new Item(id,url,userID,brand,description,category,condition,size,price,latitude,longitude));
+       ref.child("items").child(item).setValue(new Item(id,url,item,userID,brand,description,category,condition,size,price,latitude,longitude));
 
     }
 

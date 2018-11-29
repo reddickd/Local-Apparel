@@ -60,6 +60,7 @@ import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 public class MainPage extends AppCompatActivity implements LocationListener{
 
@@ -70,8 +71,10 @@ public class MainPage extends AppCompatActivity implements LocationListener{
     FirebaseStorage storage;
     StorageReference storeRef;
     Button sendMessageButton, listItemButton;
+    List<User> allUsers;
     FirebaseAuth mAuth;
     FirebaseUser user;
+    User currNonFirebaseUser;
     public static final int GET_FROM_GALLERY = 3;
     ImageView testProfilePic;
     protected LocationManager locationManager;
@@ -89,6 +92,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         backEnd = new FireBaseBackEnd(fire);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
 
         sendMessageButton = (Button) findViewById(R.id.send_message);
         listItemButton = (Button) findViewById(R.id.list_item);
@@ -189,7 +193,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
                 if(itemName.getText().toString().equals("")||brandName.getText().toString().equals("")||description.getText().toString().equals("")||price.getText().toString().equals("")){
                     Toast.makeText(getApplicationContext(),"Please fill out all fields",Toast.LENGTH_LONG).show();
                 }else {
-                    backEnd.listItem(itemName.getText().toString(), storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(), user.getUid(), brandName.getText().toString(),
+                    backEnd.listItem(itemName.getText().toString(), storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(),itemName.getText().toString(), user.getUid(), brandName.getText().toString(),
                             description.getText().toString(), dropdownSelected.toString(), conditionString, sizeDropDownSelected.toString(), price.getText().toString(),latitude,longitude);
                     popupWindow.dismiss();
                 }
@@ -220,7 +224,10 @@ public class MainPage extends AppCompatActivity implements LocationListener{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] byteData = baos.toByteArray();
-            UploadTask uploadTask = storeRef.child("images").child(user.getUid()).putBytes(byteData);
+            currNonFirebaseUser = backEnd.getCurrentUser(user.getUid());
+            currNonFirebaseUser.incrementNumItems();
+            Integer numItems = currNonFirebaseUser.getnumItems();
+            UploadTask uploadTask = storeRef.child("images").child(user.getUid()).child(numItems.toString()).putBytes(byteData);
             //uploadTask.
             if(uploadTask.isComplete()){
 
