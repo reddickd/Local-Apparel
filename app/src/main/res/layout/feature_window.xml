@@ -6,112 +6,165 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:paddingTop="20dp">
+
+    <ImageView
         android:id="@+id/brand"
-        android:layout_width="58dp"
-        android:layout_height="29dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="13dp"
-        android:gravity="center"
-        android:text="@string/brand"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+
+        android:background="@color/colorPrimary"
+        android:padding="8dp"
+        android:src="@drawable/ic_shopping_basket_black_24dp"
+        android:tint="@color/white" />
 
     <EditText
         android:id="@+id/brandInput"
-        android:layout_width="104dp"
-        android:layout_height="29dp"
-        android:layout_marginLeft="92dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="13dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/brand"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/brand"
+        android:background="@color/editTextBG"
+        android:hint="Brand"
         android:inputType="textPersonName"
+        android:paddingLeft="20dp"
+        android:textSize="15sp"
         android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/city"
-        android:layout_width="58dp"
-        android:layout_height="29dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="48dp"
-        android:gravity="center"
-        android:text="@string/city"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
 
-    <EditText
-        android:id="@+id/cityInput"
-        android:layout_width="105dp"
-        android:layout_height="29dp"
-        android:layout_marginLeft="92dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="48dp"
-        android:background="@android:color/transparent"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:paddingTop="75dp">
+
+        <ImageView
+            android:id="@+id/imgView_passwordIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:padding="8dp"
+            android:src="@drawable/ic_location_city_black_24dp"
+            android:tint="@color/white" />
+
+
+        <EditText
+            android:id="@+id/cityInput"
+            android:ems="10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imgView_passwordIcon"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imgView_passwordIcon"
+            android:background="@color/editTextBG"
+            android:hint="City"
+            android:paddingLeft="20dp"
+            android:textSize="15sp"
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="70dp"
+            tools:layout_editor_absoluteY="232dp"
+            android:text=""
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            tools:ignore="NotSibling" />
+
+    </RelativeLayout>
+
+
+
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="59dp"
+        android:layout_width="66dp"
         android:layout_height="29dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="82dp"
+        android:layout_marginTop="150dp"
         android:gravity="center"
         android:text="@string/price"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimary"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/lowRange"
+        android:ems="10"
+        android:layout_width="80dp"
+        android:layout_height="29dp"
+        android:layout_alignBottom="@+id/price"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="92dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="150dp"
+        android:layout_toRightOf="@+id/price"
+        android:background="@color/editTextBG"
+        android:textSize="15sp"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="70dp"
+        tools:layout_editor_absoluteY="232dp"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:ignore="NotSibling" />
+
+    <!--<EditText
         android:layout_width="47dp"
         android:layout_height="29dp"
         android:layout_marginLeft="92dp"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="82dp"
+        android:layout_marginTop="150dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/to"
-        android:layout_width="50dp"
+        android:textColor="@color/white"
+        android:layout_width="90dp"
         android:layout_height="29dp"
-        android:layout_marginLeft="144dp"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="82dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="150dp"
         android:gravity="center"
         android:text="@string/to"
+        android:background="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/highRange"
-        android:layout_width="62dp"
+        android:layout_width="80dp"
         android:layout_height="29dp"
         android:layout_marginEnd="120dp"
-        android:layout_marginLeft="196dp"
+        android:layout_marginLeft="330dp"
         android:layout_marginRight="120dp"
-        android:layout_marginStart="196dp"
-        android:layout_marginTop="82dp"
+        android:layout_marginStart="330dp"
+        android:layout_marginTop="150dp"
+        android:background="@color/editTextBG"
 
-        android:background="@android:color/transparent"
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
@@ -123,9 +176,9 @@
         android:id="@+id/filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="340dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="350dp"
         android:gravity="center"
         android:text="@string/filter"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,9 +190,11 @@
         android:layout_height="29dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="200dp"
         android:gravity="center"
         android:text="@string/radius"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -148,10 +203,10 @@
         android:id="@+id/radiusInput"
         android:layout_width="72dp"
         android:layout_height="29dp"
-        android:layout_marginLeft="92dp"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="116dp"
-        android:background="@android:color/transparent"
+        android:layout_marginLeft="90dp"
+        android:layout_marginStart="85dp"
+        android:layout_marginTop="200dp"
+        android:background="@color/editTextBG"
         android:ems="10"
         android:inputType="textPersonName"
         android:text=""
@@ -163,10 +218,10 @@
     <Spinner
         android:id="@+id/spinner1"
         android:layout_width="88dp"
-        android:layout_height="25dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="84dp"
         android:layout_marginStart="84dp"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="300dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
         app:layout_constraintStart_toStartOf="parent"
@@ -179,9 +234,11 @@
         android:layout_height="29dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="250dp"
         android:gravity="center"
         android:text="@string/size"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -192,7 +249,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="92dp"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="250dp"
         android:onClick="onCheckboxClicked"
         android:scaleX="0.75"
         android:scaleY="0.75"
@@ -206,7 +263,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="136dp"
         android:layout_marginStart="136dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="250dp"
         android:onClick="onCheckboxClicked"
         android:scaleX="0.75"
         android:scaleY="0.75"
@@ -220,7 +277,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="185dp"
         android:layout_marginStart="185dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="250dp"
         android:onClick="onCheckboxClicked"
         android:scaleX="0.75"
         android:scaleY="0.75"
@@ -234,7 +291,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="230dp"
         android:layout_marginStart="230dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="250dp"
         android:onClick="onCheckboxClicked"
         android:scaleX="0.75"
         android:scaleY="0.75"
@@ -244,23 +301,29 @@
 
     <TextView
         android:id="@+id/category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="59dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="192dp"
+        android:gravity="center"
+        android:layout_marginTop="300dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         android:text="@string/category"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/condition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="59dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="220dp"
+        android:gravity="center"
+        android:layout_marginTop="330dp"
         android:text="@string/condition"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -270,7 +333,7 @@
         android:layout_height="19dp"
         android:layout_marginLeft="87dp"
         android:layout_marginStart="87dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="330dp"
         android:onClick="onCheckboxClickedCondition"
         android:scaleX="0.75"
         android:scaleY="0.75"
@@ -284,7 +347,7 @@
         android:layout_height="19dp"
         android:layout_marginLeft="150dp"
         android:layout_marginStart="150dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="330dp"
 
         android:scaleX="0.75"
         android:scaleY="0.75"

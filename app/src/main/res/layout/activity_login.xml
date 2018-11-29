@@ -7,6 +7,7 @@
     android:background="@drawable/background2"
 
 
+
     >
 
     <LinearLayout
@@ -70,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/createAccount"
-            android:textColor="@color/createAccountText"
+            android:textColor="@color/white"
             android:onClick="createNewAccount"/>
     </LinearLayout>
 
