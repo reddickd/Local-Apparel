@@ -13,6 +13,7 @@ import com.example.cmsc436.localapparel.Objects.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,11 +31,13 @@ public class FireBaseBackEnd {
     DatabaseReference ref;
     StorageReference storageReference;
     List<User> allUsers;
+    List<Item> allItems;
     Bitmap bmp; //used to store and return a bitmap for the image you want
 
     public FireBaseBackEnd(FirebaseDatabase fire){
         this.fire = fire;
         allUsers = new ArrayList<User>();
+        allItems = new ArrayList<Item>();
 
         ref = fire.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -54,6 +57,24 @@ public class FireBaseBackEnd {
                     allUsers.add(user);
                 }
             }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        ref.child("items").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                allItems.clear();
+                for (DataSnapshot i : children) {
+                    Item item = i.getValue(Item.class);
+                    allItems.add(item);
+                }
+            }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -78,12 +99,60 @@ public class FireBaseBackEnd {
         return null;
     }
 
+    public Item getItem(String userId, String itemName){
+        for(Item i: allItems){
+            if(i.getUserID().equals(userId) && i.getName().equals(itemName)){
+                return i;
+            }
+        }
+        return null;
+    }
+//idk if either delete works right now
+    public void deleteItem(String userId, String itemName){
+        for(Item i: allItems) {
+            if (i.getUserID().equals(userId) && i.getName().equals(itemName)) {
+                allItems.remove(i);
+                Query toDelete = ref.child("items").equalTo(itemName);
+                toDelete.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                            appleSnapshot.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+        }
+    }
+
+    public void deleteItem(Item item){
+        allItems.remove(item);
+        Query toDelete = ref.child("items").equalTo(item.itemName);
+        toDelete.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                    appleSnapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void listItem(String item, String url, String name, String userID, String brand, String description,String category,String condition,String size, String price, String latitude, String longitude){
 
         if(ref.child("items") != null){
-            id = getItemCount();
+           // id = getItemCount();
+            id = allItems.size();
         }
-       ref.child("items").child(item).setValue(new Item(id,url,item,userID,brand,description,category,condition,size,price,latitude,longitude));
+       ref.child("items").child(item).setValue(new Item(id,url,item,userID,brand,description,category,condition,size,price,latitude,longitude,item));
 
     }
 

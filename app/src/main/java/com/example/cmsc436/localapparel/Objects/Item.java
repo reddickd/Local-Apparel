@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Item implements Serializable{
     int id;
-    String downloadURL,userID, name, brand, description, category, condition, size, price,latitude, longitude;
+    String downloadURL,userID, name, brand, description, category, condition, size, price,latitude, longitude, itemName;
    // double latitude, longitude;
 
     ArrayList<String> otherImages;
@@ -21,9 +21,10 @@ public class Item implements Serializable{
 
     public Item(){}
 
-    public Item(int id, String downloadURL, String name, String userID, String brand, String description, String category, String condition, String size, String price,String latitude, String longitude){
+    public Item(int id, String downloadURL, String name, String userID, String brand, String description, String category, String condition, String size, String price,String latitude, String longitude, String itemName){
         this.downloadURL = downloadURL;
         this.id = id;
+        this.itemName = itemName;
         this.userID = userID;
         this.name = name;
         this.brand = brand;
@@ -131,6 +132,13 @@ public class Item implements Serializable{
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public void setItemName(String itemName){
+        this.itemName = itemName;
+    }
+    public String getItemName(){
+        return this.itemName;
     }
 
 //    public double getLatitude() {

@@ -31,12 +31,18 @@
     <string name="moneySymbol">$</string>
     <string name="reset">Reset</string>
     <string-array name="categories">
+        <item>Jacket</item>
+        <item>Coat</item>
+        <item>Vest</item>
+        <item>Long Sleeve</item>
         <item>Shirt</item>
-        <item>Pants</item>
-        <item>Shoes</item>
-        <item>Jacket/Sweater</item>
-        <item>Dress</item>
+        <item>Hoodie</item>
+        <item>Polo</item>
+        <item>Sweater</item>
         <item>Accessories</item>
+        <item>Denim</item>
+        <item>Shorts</item>
+        <item>Trousers</item>
     </string-array>
     <string-array name="sizes">
         <item>S</item>

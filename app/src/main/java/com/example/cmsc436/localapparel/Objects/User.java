@@ -9,7 +9,7 @@ public class User {
 
     String email,password,uid,phoneNumber;
     Double userLat, userLong;
-    int numItems;
+    //int numItems;
     List<Chat> chats;
 
     //String name
@@ -20,7 +20,7 @@ public class User {
     }
 
     public User(String email,String password,String uid,String phoneNumber, Double lat, Double longitude){
-        numItems = 0;
+        //numItems = 0;
         //this.name = name;
         this.uid = uid;
         this.email = email;
@@ -66,15 +66,15 @@ public class User {
         }
         this.chats.add(chat);}
     public List<Chat> getChats() { return  this.chats;}
-    public int getnumItems(){
-        return this.numItems;
-    }
-    public void setNumItems(int num){
-        this.numItems = numItems;
-    }
-    public void incrementNumItems(){
-        this.numItems++;
-    }
+//    public int getnumItems(){
+//        return this.numItems;
+//    }
+//    public void setNumItems(int num){
+//        this.numItems = num;
+//    }
+//    public void incrementNumItems(){
+//        this.numItems++;
+//    }
     public double getLatitude(){
         return this.userLat;
     }

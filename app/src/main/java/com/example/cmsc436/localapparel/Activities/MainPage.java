@@ -1,6 +1,7 @@
 package com.example.cmsc436.localapparel.Activities;
 
 import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
+import com.example.cmsc436.localapparel.Objects.Item;
 import com.example.cmsc436.localapparel.Objects.User;
 import com.example.cmsc436.localapparel.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +21,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.content.Context;
-
+import java.text.NumberFormat;
+import java.util.Locale;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -65,7 +67,8 @@ import java.util.List;
 public class MainPage extends AppCompatActivity implements LocationListener{
 
     private Object dropdownSelected,sizeDropDownSelected;
-    String downloadURL = "",conditionString = "", latitude, longitude;
+    String downloadURL = "",conditionString = "", latitude, longitude, itemNameToAdd;
+    //String pricePattern = "^(([1-9]d{0,2}(,d{3})*)|(([1-9]d*)?d))(.dd)?$";
     FirebaseDatabase fire;
     FireBaseBackEnd backEnd;
     FirebaseStorage storage;
@@ -93,7 +96,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         backEnd = new FireBaseBackEnd(fire);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        databaseItemCount = backEnd.getItemCount();
+        //databaseItemCount = backEnd.getItemCount();
 
 
         sendMessageButton = (Button) findViewById(R.id.send_message);
@@ -155,7 +158,6 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -193,16 +195,52 @@ public class MainPage extends AppCompatActivity implements LocationListener{
             public void onClick(View view) {
 
                 if(itemName.getText().toString().equals("")||brandName.getText().toString().equals("")||description.getText().toString().equals("")||price.getText().toString().equals("")){
-                    Toast.makeText(getApplicationContext(),"Please fill out all fields",Toast.LENGTH_LONG).show();
-                }else {
+                    Toast.makeText(getApplicationContext(),"Please fill out all fields",Toast.LENGTH_SHORT).show();
+                }else if(!inputValidator(price.getText().toString())){
+                    Toast.makeText(getApplicationContext(),"Input valid price",Toast.LENGTH_SHORT).show();
+                }else if(itemName.getText().toString().length()>15){
+                    Toast.makeText(getApplicationContext(),"Item name too long",Toast.LENGTH_SHORT).show();
+                } else if(brandName.getText().toString().length()>15){
+                    Toast.makeText(getApplicationContext(),"Brand name too long",Toast.LENGTH_SHORT).show();
+                } else{
+                    itemNameToAdd = itemName.getText().toString();
                     backEnd.listItem(itemName.getText().toString(), storeRef.child("images").child(user.getUid()).getDownloadUrl().toString(),itemName.getText().toString(), user.getUid(), brandName.getText().toString(),
                             description.getText().toString(), dropdownSelected.toString(), conditionString, sizeDropDownSelected.toString(), price.getText().toString(),latitude,longitude);
                     popupWindow.dismiss();
+
+                    startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
                 }
             }
         });
 
 
+    }
+
+    private boolean inputValidator(String input){
+       //^\$(([1-9]\d{0,2}(,\d{3})*)|(([1-9]\d*)?\d))(\.\d\d)?$
+
+//        final Pattern toMatch = Pattern.compile(pattern);
+//        if (!toMatch.matcher(input).matches()) {
+//            return false;
+//        }else{
+//            return true;
+//        }
+        Number number = null;
+
+        try {
+            number = NumberFormat.getCurrencyInstance(Locale.US).parse("$" + input);
+        }catch(Exception e){
+            return false;
+        }
+
+        if (number != null) {
+            // proceed as user entered a good value
+            return true;
+        }
+        else {
+            // user didn't enter a good value
+            return false;
+        }
     }
 
     @Override
@@ -224,19 +262,34 @@ public class MainPage extends AppCompatActivity implements LocationListener{
                 e.printStackTrace();
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] byteData = baos.toByteArray();
+            if(bitmap == null) {
+                Toast.makeText(getApplicationContext(), "No picture uploaded, listing deleted", Toast.LENGTH_LONG).show();
+                backEnd.deleteItem(user.getUid(), itemNameToAdd);
+            }
+//            }else {
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                byte[] byteData = baos.toByteArray();
+//            }
 //            currNonFirebaseUser = backEnd.getCurrentUser(user.getUid());
 //            currNonFirebaseUser.incrementNumItems();
 //            Integer numItems = currNonFirebaseUser.getnumItems();
             //Integer itemCount = backEnd.getItemCount();
-            String storageEntry = user.getUid() +databaseItemCount;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] byteData = baos.toByteArray();
+
+
+            Item toAdd = backEnd.getItem(user.getUid(),itemNameToAdd);
+            String storageEntry = user.getUid() + toAdd.getId();
             //UploadTask uploadTask = storeRef.child("images").child(user.getUid()).child(numItems.toString()).putBytes(byteData);
             UploadTask uploadTask = storeRef.child("images").child(storageEntry).putBytes(byteData);
             //uploadTask.
-            if(uploadTask.isComplete()){
+            if(uploadTask.isComplete()) {
 
             }
+//            Toast.makeText(getApplicationContext(),"No picture uploaded, listing deleted",Toast.LENGTH_LONG).show();
+//            backEnd.deleteItem(toAdd);
+            //delete items if image not selected
+
 //            uploadTask.addOnFailureListener(new OnFailureListener() {
 //                @Override
 //                public void onFailure(@NonNull Exception exception) {
