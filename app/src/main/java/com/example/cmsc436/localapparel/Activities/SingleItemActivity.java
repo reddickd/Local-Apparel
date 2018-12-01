@@ -141,7 +141,7 @@ public class SingleItemActivity extends AppCompatActivity {
                     }
                 }
 
-                storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024)
+                storeRef.child("images").child(item.getUserID()+item.getId()).getBytes(1024*1024)
                         .addOnSuccessListener(new com.google.android.gms.tasks
                                 .OnSuccessListener<byte[]>() {
                     @Override

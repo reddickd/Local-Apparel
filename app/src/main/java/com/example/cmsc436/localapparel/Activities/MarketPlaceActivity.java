@@ -494,7 +494,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
             price.setText(item.getPrice());
             condition.setText(item.getCondition());
 
-            storeRef.child("images").child(item.getDownloadURL()).getBytes(1024 * 1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+            storeRef.child("images").child(item.getUserID()+item.getId()).getBytes(1024 * 1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
