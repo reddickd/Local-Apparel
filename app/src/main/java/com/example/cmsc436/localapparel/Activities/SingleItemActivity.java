@@ -21,6 +21,7 @@ import com.example.cmsc436.localapparel.Objects.User;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.widget.ArrayAdapter;
 import android.view.ViewGroup;
 import android.support.v7.app.AppCompatActivity;
@@ -81,7 +82,7 @@ public class SingleItemActivity extends AppCompatActivity {
      */
 
     private String TAG = "SingleItemActivity";
-    private TextView name, brand, description, price;
+    private TextView name, brand, description, price, size, condition, category;
     private ImageView picOfItem;
     StorageReference storeRef;
     DatabaseReference ref;
@@ -92,7 +93,6 @@ public class SingleItemActivity extends AppCompatActivity {
     User temp;
     Item item;
     User seller;
-    List<Chat> chatList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +113,9 @@ public class SingleItemActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         price = findViewById(R.id.price);
         picOfItem = findViewById(R.id.detailDisplayPic);
+        size = findViewById(R.id.size);
+        condition = findViewById(R.id.condition);
+        category = findViewById(R.id.category);
 
         allUsers = new ArrayList<User>();
         FirebaseUser seller;
@@ -126,7 +129,6 @@ public class SingleItemActivity extends AppCompatActivity {
                 for (DataSnapshot child : children) {
                     User user = child.getValue(User.class);
                     allUsers.add(user);
-
                 }
 
                 User tempSeller = null;
@@ -139,21 +141,24 @@ public class SingleItemActivity extends AppCompatActivity {
                     }
                 }
 
-                storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
+                storeRef.child("images").child(item.getDownloadURL()).getBytes(1024*1024)
+                        .addOnSuccessListener(new com.google.android.gms.tasks
+                                .OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         picOfItem.setImageBitmap(bmp);
-                        Log.d("TEST", "downloaded picture");
                     }
                 });
 
-                name.setText("Seller: " + tempSeller.getEmail());
                 brand.setText(item.getBrand());
+                price.setText(Html.fromHtml("<b>" + "Price: </b>$" + item.getPrice()));
+                size.setText(Html.fromHtml("<b>Size: </b>" + item.getSize()));
+                category.setText(Html.fromHtml("<b>Category: </b>" + item.getCategory()));
+                condition.setText(Html.fromHtml("<b>Condition: </b>" + item.getCondition()));
+                name.setText(Html.fromHtml("<b>" + "Seller: " + "</b>"
+                        + tempSeller.getEmail()));
                 description.setText("Description of item: " + item.getDescription());
-                price.setText(item.getPrice());
-
-
             }
 
             @Override
@@ -161,13 +166,10 @@ public class SingleItemActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void sendMessageToBuyItem(View view) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
         for (User u : allUsers) {
             if (u.getUid().equals(item.getUserID())) {
                 this.seller = u;
@@ -176,6 +178,7 @@ public class SingleItemActivity extends AppCompatActivity {
                 temp = u;
             }
         }
+
         /* The current user is trying to message themself...*/
         if (this.seller.getUid().equals(temp.getUid())) {
             alert.setTitle("This is your item! You cannot message yourself...");
@@ -187,11 +190,9 @@ public class SingleItemActivity extends AppCompatActivity {
             // Set an EditText view to get user input
             final EditText input = new EditText(this);
             alert.setView(input);
-
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     //make theres text in the box
-
                     int hours, minutes;
                     String amOrPM, timeStamp = null;
 
@@ -218,7 +219,6 @@ public class SingleItemActivity extends AppCompatActivity {
 
                     backEnd.addUser(temp);
                     backEnd.addUser(seller);
-
                     // Do something with value!
                 }
             });
