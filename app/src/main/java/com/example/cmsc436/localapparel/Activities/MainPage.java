@@ -97,6 +97,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         //databaseItemCount = backEnd.getItemCount();
+        displayProfilePicture();
 
 
         sendMessageButton = (Button) findViewById(R.id.send_message);

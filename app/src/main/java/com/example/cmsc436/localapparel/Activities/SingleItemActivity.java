@@ -12,6 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import com.example.cmsc436.localapparel.Objects.Chat;
 import com.example.cmsc436.localapparel.Objects.FireBaseBackEnd;
@@ -207,10 +210,13 @@ public class SingleItemActivity extends AppCompatActivity {
 
                     timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
 
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    Date date = new Date();
+
                     Message m = new Message(user.getUid(), input.getText().toString(), timeStamp);
                     List<Message> messages = new ArrayList<Message>();
                     messages.add(m);
-                    Chat newChat = new Chat(user.getUid(), seller.getUid(), item.getName());
+                    Chat newChat = new Chat(user.getUid(), seller.getUid(), item.getName(),dateFormat.format(date));
 
                     newChat.addMessage(m);
 

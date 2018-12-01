@@ -61,6 +61,7 @@ public class CreateUserActivity extends AppCompatActivity {
         phoneNumField = findViewById(R.id.phoneNumberField);
         profilePicImagePreview = findViewById(R.id.profilePicture);
         mLocationManger = (LocationManager) getSystemService(LOCATION_SERVICE);
+        getLocation();
 
     }
 

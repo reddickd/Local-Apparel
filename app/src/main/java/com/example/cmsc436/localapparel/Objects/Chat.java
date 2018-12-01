@@ -8,13 +8,15 @@ public class Chat implements Serializable {
 
     private String reciever;
     private String sender;
-    private String itemName;
+    private String itemName, date;
+
     private List<Message> messages;
 
-    public Chat(String from, String to, String itemName){
+    public Chat(String from, String to, String itemName, String date){
         this.sender = from;
         this.reciever = to;
         this.itemName = itemName;
+        this.date = date;
         messages = new ArrayList<Message>();
     }
 
@@ -55,5 +57,9 @@ public class Chat implements Serializable {
 
     public void addMessage(Message m){
         messages.add(m);
+    }
+
+    public String getDate() {
+        return date;
     }
 }
