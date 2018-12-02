@@ -48,25 +48,26 @@ public class LoginActivity extends AppCompatActivity {
     public void logInPressed(View view) {
         String email = emailField.getText().toString();
         String password = passwordField.getText().toString();
+        if((!email.equals("")) && !password.equals("")) {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        //The sign in was successful we should go to next activity
+                        Log.d(TAG, "Signed in successful");
+                        //Get current user information
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        //go to next activty
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    //The sign in was successful we should go to next activity
-                    Log.d(TAG, "Signed in successful");
-                    //Get current user information
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    //go to next activty
-
-                    startActivity(new Intent(LoginActivity.this, MainPage.class));
-                }else{
-                    //Sign in failed
-                    Log.w(TAG, "Sign in failed");
-                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, MainPage.class));
+                    } else {
+                        //Sign in failed
+                        Log.w(TAG, "Sign in failed");
+                        Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     //Onclick method when the user clicks the Create New Account Text
