@@ -51,4 +51,6 @@
         <item>XL</item>
     </string-array>
     <string name="sendMessageFromItemPage">Send Message</string>
+    <string name="resetPassword">Forgot Password</string>
+    <string name="logOut">Log Out</string>
 </resources>

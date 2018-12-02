@@ -83,6 +83,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
     ImageView testProfilePic;
     protected LocationManager locationManager;
     protected LocationListener locationListener;
+    private Button logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -96,6 +97,7 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         backEnd = new FireBaseBackEnd(fire);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        logoutButton = findViewById(R.id.log_out);
         //databaseItemCount = backEnd.getItemCount();
         displayProfilePicture();
 
@@ -110,6 +112,17 @@ public class MainPage extends AppCompatActivity implements LocationListener{
 
         }
 
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent(MainPage.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     public void sendMessagePressed(View view){
@@ -118,6 +131,13 @@ public class MainPage extends AppCompatActivity implements LocationListener{
 
     public void goToMarketplace(View view){
         startActivity(new Intent(MainPage.this, MarketPlaceActivity.class));
+    }
+
+    public void logOut(View view){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     public void listItemPressed(View view){

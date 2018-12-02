@@ -73,6 +73,14 @@
             android:text="@string/createAccount"
             android:textColor="@color/white"
             android:onClick="createNewAccount"/>
+
+        <TextView
+            android:id="@+id/resetPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/resetPassword"
+            android:textColor="@color/white"
+            android:onClick="resetPassword"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

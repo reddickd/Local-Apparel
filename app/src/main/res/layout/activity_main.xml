@@ -112,4 +112,31 @@
             />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/log_out"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="600dp"
+            android:background="@drawable/buttonshape"
+            android:drawableTop="@drawable/ic_shopping_basket_black_24dp"
+            android:onClick="goToMarketplace"
+            android:paddingTop="15dp"
+            android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:text="@string/logOut"
+            android:textColor="#000"
+            android:textSize="20sp"
+
+
+            />
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
