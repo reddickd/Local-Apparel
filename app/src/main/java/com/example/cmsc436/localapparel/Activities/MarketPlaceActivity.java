@@ -280,14 +280,21 @@ public class MarketPlaceActivity extends AppCompatActivity {
             }
             */
         radius = data.getStringExtra("radius");
-        if (radius != null && aCategoryClearedList == false) {
+        Log.d("Hi","WentHEREBOI");
+        if (!radius.isEmpty() && aCategoryClearedList == false) {
             double radiusVal = Double.parseDouble(radius);
             noFilterOptionClicked = false;
             if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
                 for (Item element:copiedOverList) {
+                    Log.d("Hi","WentHEREBOI222");
                     double miles = distanceFromSeller(currentUser.getLatitude(), currentUser.getLongitude()
-                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLatitude()));
+                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLongitude()));
                     //double miles = Math.hypot(currentUser.getLatitude()-Double.parseDouble(element.getLatitude()),currentUser.getLongitude()-Double.parseDouble(element.getLatitude()));
+                    Log.d("Hi","UserLat: " + currentUser.getLatitude());
+                    Log.d("Hi","UserLong: " + currentUser.getLongitude());
+                    Log.d("Hi","itemLat: " + Double.parseDouble(element.getLatitude()));
+                    Log.d("Hi","itemLong: " + Double.parseDouble(element.getLongitude()));
+                    Log.d("Hi","Distance: " + miles);
                     if ( miles <= radiusVal){
                         tempNewList.add(element);
                     }
@@ -298,10 +305,8 @@ public class MarketPlaceActivity extends AppCompatActivity {
             } else {
                 for (Item element : tempNewList) {
                     double miles = distanceFromSeller(currentUser.getLatitude(), currentUser.getLongitude()
-                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLatitude()));
+                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLongitude()));
                     if (miles > radiusVal){
-                        //currentUser.getLatitude();
-                        //currentUser.getLongitude();
                         tempNewList.remove(element);
                     }
                 }
