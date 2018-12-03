@@ -33,6 +33,8 @@ public class Item implements Serializable{
         this.condition = condition;
         this.size = size;
         this.price = price;
+        this.latitude = latitude;
+        this.longitude = longitude;
 
         otherImages = new ArrayList<String>();
     }
