@@ -152,7 +152,7 @@ public class FireBaseBackEnd {
            // id = getItemCount();
             id = allItems.size();
         }
-       ref.child("items").child(item).setValue(new Item(id,url,item,userID,brand,description,category,condition,size,price,latitude,longitude,item));
+       ref.child("items").child(item).setValue(new Item(id,url,item,userID,brand,description,category,condition,size,price,latitude,longitude,name));
 
     }
 
