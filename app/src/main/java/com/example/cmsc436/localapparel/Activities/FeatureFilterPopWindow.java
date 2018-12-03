@@ -38,7 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.google.firebase.auth.FirebaseUser;
 public class FeatureFilterPopWindow extends AppCompatActivity implements OnItemSelectedListener{
-    EditText brandInput,cityInput,lowRangeInput,highRangeInput,radius;
+    EditText brandInput,lowRangeInput,highRangeInput,radius;
     Button filterButton;
     Spinner spin;
     String checkS=null,checkM =null,checkL =null,checkXL = null;
@@ -51,7 +51,7 @@ public class FeatureFilterPopWindow extends AppCompatActivity implements OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feature_window);
         brandInput = (EditText)findViewById(R.id.brandInput);
-        cityInput = (EditText)findViewById(R.id.cityInput);
+
         lowRangeInput = (EditText)findViewById(R.id.lowRange);
         highRangeInput = (EditText)findViewById(R.id.highRange);
         filterButton = (Button)findViewById(R.id.filter);
@@ -75,14 +75,14 @@ public class FeatureFilterPopWindow extends AppCompatActivity implements OnItemS
         filterButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 String brandStr = brandInput.getText().toString();
-                String cityStr = cityInput.getText().toString();
+
                 String lowRangeInputStr = lowRangeInput.getText().toString();
                 String highRangeInputStr = highRangeInput.getText().toString();
                 String radiusInput = radius.getText().toString();
 
                 Intent intentSendPackageBack = new Intent();
                 intentSendPackageBack.putExtra("brand", brandStr);
-                intentSendPackageBack.putExtra("city", cityStr);
+
                 intentSendPackageBack.putExtra("lowRange", lowRangeInputStr);
                 intentSendPackageBack.putExtra("highRange", highRangeInputStr);
                 intentSendPackageBack.putExtra("radius", radiusInput);
