@@ -26,6 +26,7 @@ import java.util.Locale;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -205,11 +206,21 @@ public class MainPage extends AppCompatActivity implements LocationListener{
         });
 
 
-        if(conidtionSwitch.isChecked()){
-            conditionString = "Used";
-        }else {
-            conditionString = "New";
+        if (conidtionSwitch != null) {
+            conidtionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(conidtionSwitch.isChecked()){
+                        conditionString = "Used";
+                    }else {
+                        conditionString = "New";
+                    }
+                }
+            });
         }
+
+
+
 
         submitItemButton.setOnClickListener(new View.OnClickListener(){
             @Override
