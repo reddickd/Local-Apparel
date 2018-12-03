@@ -233,7 +233,18 @@ public class MarketPlaceActivity extends AppCompatActivity {
             Log.d("Hi","Went here");
         }
     }
+    public static double distanceFromSeller(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 3958.75; //miles
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist =  (earthRadius * c);
 
+        return dist;
+    }
 
     public ArrayList<Item> filterItemList(Intent data, ArrayList<Item> copiedOverList) {
         ArrayList<Item> tempNewList = new ArrayList<Item>();
@@ -274,11 +285,10 @@ public class MarketPlaceActivity extends AppCompatActivity {
             noFilterOptionClicked = false;
             if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
                 for (Item element:copiedOverList) {
-                    double miles = Math.hypot(currentUser.getLatitude()-Double.parseDouble(element.getLatitude())
-                            ,currentUser.getLongitude()-Double.parseDouble(element.getLatitude()));
+                    double miles = distanceFromSeller(currentUser.getLatitude(), currentUser.getLongitude()
+                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLatitude()));
+                    //double miles = Math.hypot(currentUser.getLatitude()-Double.parseDouble(element.getLatitude()),currentUser.getLongitude()-Double.parseDouble(element.getLatitude()));
                     if ( miles <= radiusVal){
-                        //currentUser.getLatitude();
-                        //currentUser.getLongitude();
                         tempNewList.add(element);
                     }
                 }
@@ -287,8 +297,8 @@ public class MarketPlaceActivity extends AppCompatActivity {
                 }
             } else {
                 for (Item element : tempNewList) {
-                    double miles = Math.hypot(currentUser.getLatitude()-Double.parseDouble(element.getLatitude())
-                            ,currentUser.getLongitude()-Double.parseDouble(element.getLongitude()));
+                    double miles = distanceFromSeller(currentUser.getLatitude(), currentUser.getLongitude()
+                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLatitude()));
                     if (miles > radiusVal){
                         //currentUser.getLatitude();
                         //currentUser.getLongitude();
