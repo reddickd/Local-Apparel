@@ -104,7 +104,7 @@
 
     <EditText
         android:id="@+id/lowRange"
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_height="29dp"
         android:layout_alignBottom="@+id/price"
         android:layout_alignParentTop="true"
@@ -137,9 +137,9 @@
 
     <TextView
         android:id="@+id/to"
-        android:layout_width="45dp"
+        android:layout_width="60dp"
         android:layout_height="29dp"
-        android:layout_marginStart="167dp"
+        android:layout_marginStart="162dp"
         android:layout_marginTop="129dp"
         android:background="@color/colorPrimary"
         android:gravity="center"
@@ -153,7 +153,7 @@
         android:layout_width="80dp"
         android:layout_height="29dp"
         android:layout_marginEnd="120dp"
-        android:layout_marginStart="243dp"
+        android:layout_marginStart="290dp"
         android:layout_marginTop="129dp"
         android:background="@color/editTextBG"
 
@@ -297,7 +297,7 @@
 
     <TextView
         android:id="@+id/condition"
-        android:layout_width="59dp"
+        android:layout_width="68dp"
         android:layout_height="20dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="285dp"
