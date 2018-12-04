@@ -135,8 +135,13 @@ public class IndividualChat extends AppCompatActivity {
             amOrPM = "AM";
         }
         minutes = java.time.LocalTime.now().getMinute();
+        if(minutes <= 9){
+            timeStamp = Integer.toString(hours) + ":0" + Integer.toString(minutes) + " " + amOrPM;
+        }else{
+            timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
+        }
 
-        timeStamp = Integer.toString(hours) + ":" + Integer.toString(minutes) + " " + amOrPM;
+
 
 
 

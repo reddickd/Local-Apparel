@@ -150,8 +150,7 @@ public class FeatureFilterPopWindow extends AppCompatActivity implements OnItemS
 
         categoryPicked.add(item);
         // Showing selected spinner item
-        if(item != "")
-            Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+
     }
     public void onNothingSelected(AdapterView<?> arg0) {
 

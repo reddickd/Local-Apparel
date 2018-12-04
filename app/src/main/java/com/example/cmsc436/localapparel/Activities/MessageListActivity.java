@@ -141,7 +141,8 @@ public class MessageListActivity extends AppCompatActivity {
                 }
 
                 senderEmail.setText(otherUser.getEmail());
-                date.setText("1/1/2010");
+                date.setText(chat.getDate());
+                chatItemName.setText(chat.getItemName());
 
                 storeRef.child("profilePictures").child(otherUser.getUid()).getBytes(1024*1024).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<byte[]>() {
                     @Override
