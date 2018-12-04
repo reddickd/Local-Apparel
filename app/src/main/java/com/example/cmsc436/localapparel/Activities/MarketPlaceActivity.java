@@ -260,6 +260,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
             for (Item element : copiedOverList) {
                 if (element.getBrand().equals(brand)) {
                     //Log.d("Hi",element.getBrand().equals(brand)+element.getBrand()+" "+brand+" ");
+                    Log.d("Hi",element.getName());
                     tempNewList.add(element);
                 }
 
@@ -268,6 +269,42 @@ public class MarketPlaceActivity extends AppCompatActivity {
                 aCategoryClearedList = true;
             }
         }
+        lowRange = data.getStringExtra("lowRange");
+        highRange = data.getStringExtra("highRange");
+        if (!lowRange.isEmpty() && !highRange.isEmpty() && aCategoryClearedList == false) {
+            noFilterOptionClicked = false;
+            Log.d("Hi","REACHED THE RANGE SECTION");
+            if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
+                for (Item element : copiedOverList) {
+                    Log.d("Hi","REACHEDRange333");
+                    if (Integer.parseInt(element.getPrice()) >= Integer.parseInt(lowRange)
+                            && Integer.parseInt(element.getPrice()) <= Integer.parseInt(highRange)) {
+                        tempNewList.add(element);
+                    }
+                }
+                if(tempNewList.isEmpty()){
+                    aCategoryClearedList = true;
+                }
+            } else { //Already items in temp list
+
+                for (int x = 0; x < tempNewList.size(); x++) {
+                    Log.d("Hi","REACHEDRange555");
+
+                    if (Integer.parseInt(tempNewList.get(x).getPrice()) < Integer.parseInt(lowRange)
+                            || Integer.parseInt(tempNewList.get(x).getPrice()) > Integer.parseInt(highRange)) {
+
+                        Log.d("Hi","REACHEDRange777");
+                        tempNewList.remove(tempNewList.get(x));
+                        x--;
+                    }
+                    Log.d("Hi","REACHEDRange888");
+                }
+                if(tempNewList.isEmpty()) {
+                    aCategoryClearedList = true;
+                }
+            }
+        }
+        Log.d("Hi","REACHEDRange6666");
         // Log.d("Hi","The Item list brand"+ tempNewList.get(0).getBrand());
             /*
             city = data.getStringExtra("city");
@@ -280,8 +317,9 @@ public class MarketPlaceActivity extends AppCompatActivity {
             }
             */
         radius = data.getStringExtra("radius");
-        Log.d("Hi","WentHEREBOI");
+
         if (!radius.isEmpty() && aCategoryClearedList == false) {
+            Log.d("Hi","WentHEREBOI2");
             double radiusVal = Double.parseDouble(radius);
             noFilterOptionClicked = false;
             if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
@@ -303,47 +341,27 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     aCategoryClearedList = true;
                 }
             } else {
-                for (Item element : tempNewList) {
-                    double miles = distanceFromSeller(currentUser.getLatitude(), currentUser.getLongitude()
-                            , Double.parseDouble(element.getLatitude()), Double.parseDouble(element.getLongitude()));
-                    if (miles > radiusVal){
-                        tempNewList.remove(element);
+                Log.d("Hi","WentHEREBOI333");
+                if(!tempNewList.isEmpty()) {
+                    Log.d("Hi","WentHEREBOI444");
+                    for (int x = 0; x < tempNewList.size(); x++) {
+                        double miles = distanceFromSeller(currentUser.getLatitude(), currentUser.getLongitude()
+                                , Double.parseDouble(tempNewList.get(x).getLatitude()), Double.parseDouble(tempNewList.get(x).getLongitude()));
+                        if (miles > radiusVal) {
+                            tempNewList.remove(tempNewList.get(x));
+                            x--;
+                        }
                     }
                 }
                 if (tempNewList.isEmpty()) {
+                    Log.d("Hi","WentHEREBOI555");
                     aCategoryClearedList = true;
                 }
             }
         }
 
 
-        lowRange = data.getStringExtra("lowRange");
-        highRange = data.getStringExtra("highRange");
-        if (!lowRange.isEmpty() && !highRange.isEmpty() && aCategoryClearedList == false) {
-            noFilterOptionClicked = false;
-            Log.d("Hi","REACHED THE RANGE SECTION");
-            if (tempNewList.isEmpty()) { //Assume nothing has been added to the temp list
-                for (Item element : copiedOverList) {
-                    if (Integer.parseInt(element.getPrice()) >= Integer.parseInt(lowRange)
-                            && Integer.parseInt(element.getPrice()) <= Integer.parseInt(highRange)) {
-                        tempNewList.add(element);
-                    }
-                }
-                if(tempNewList.isEmpty()){
-                    aCategoryClearedList = true;
-                }
-            } else { //Already items in temp list
-                for (Item element : tempNewList) {
-                    if (Integer.parseInt(element.getPrice()) < Integer.parseInt(lowRange)
-                            || Integer.parseInt(element.getPrice()) > Integer.parseInt(highRange)) {
-                        tempNewList.remove(element);
-                    }
-                }
-                if(tempNewList.isEmpty()) {
-                    aCategoryClearedList = true;
-                }
-            }
-        }
+
 
         //String smallSize = data.getStringExtra("checkS");
         //String mediumSize = data.getStringExtra("checkM");
@@ -352,25 +370,19 @@ public class MarketPlaceActivity extends AppCompatActivity {
         ArrayList<String> listSizes = new ArrayList<String>();
         listSizes = data.getStringArrayListExtra("size");
 
-        //if(!smallSize.isEmpty())
-        //    listSizes.add(smallSize);
-        //if(!mediumSize.isEmpty())
-        //    listSizes.add(mediumSize);
-        //if(!largeSize.isEmpty())
-        //    listSizes.add(largeSize);
-        //if(!xlargeSize.isEmpty())
-        //    listSizes.add(xlargeSize);
 
 
         //Log.d("Hi","size of list" + String.valueOf(listSizes.size()));
 
         if (listSizes != null && aCategoryClearedList == false) {
+            Log.d("Hi","WentHEREBOI3");
             noFilterOptionClicked = false;
             Log.d("Hi","REACHed CheckSize");
             if (!tempNewList.isEmpty()) {
-                for (Item element : tempNewList) {
-                    if (!listSizes.contains(element.getSize())) {
-                        tempNewList.remove(element);
+                for (int x = 0; x < tempNewList.size(); x++) {
+                    if (!listSizes.contains(tempNewList.get(x).getSize())) {
+                        tempNewList.remove(tempNewList.get(x));
+                        x--;
                     }
                 }
 
@@ -378,9 +390,11 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     aCategoryClearedList = true;
                 }
             } else { //Nothing has been adding to temp list
-                for (Item element : copiedOverList) {
+                Log.d("Hi",String.valueOf(listSizes.size()));
+                for (Item element:copiedOverList) {
                     if (listSizes.contains(element.getSize())) {
                         tempNewList.add(element);
+
                     }
                 }
                 if(tempNewList.isEmpty()) {
@@ -405,6 +419,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
         // Log.d("Hi","Condition1: " + conditionUsed);
         //Log.d("Hi","Condition1: " + conditionNew);
         if (!conditionList.isEmpty() && aCategoryClearedList == false) {
+            Log.d("Hi","WentHEREBOI5");
             noFilterOptionClicked = false;
             if (tempNewList.isEmpty()) {
                 for (Item element : copiedOverList) {
@@ -418,9 +433,10 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     aCategoryClearedList = true;
                 }
             } else {
-                for (Item element : tempNewList) {
-                    if (!conditionList.contains(element.getCondition())) {
-                        tempNewList.remove(element);
+                for (int x = 0; x < tempNewList.size(); x++) {
+                    if (!conditionList.contains(tempNewList.get(x).getCondition())) {
+                        tempNewList.remove(tempNewList.get(x));
+                        x--;
                     }
                 }
                 if (tempNewList.isEmpty()) {
@@ -431,6 +447,7 @@ public class MarketPlaceActivity extends AppCompatActivity {
         //add reset button!!!
         ArrayList<String> categoryList = data.getExtras().getStringArrayList("category");
         if (categoryList != null && categoryList.size() != 0 && aCategoryClearedList == false) {
+            Log.d("Hi","WentHEREBOI6");
             noFilterOptionClicked = false;
             Log.d("Hi","List of item:" + categoryList.get(0));
             if (tempNewList.isEmpty()) { // Nothing has been added to the list
@@ -443,9 +460,10 @@ public class MarketPlaceActivity extends AppCompatActivity {
                     aCategoryClearedList = true;
                 }
             } else { //Temp list is not empty
-                for (Item element : tempNewList) {
-                    if (!categoryList.contains(element.getCategory())) {
-                        tempNewList.remove(element);
+                for (int x = 0; x < tempNewList.size(); x++) {
+                    if (!categoryList.contains(tempNewList.get(x).getCategory())) {
+                        tempNewList.remove(tempNewList.get(x));
+                        x--;
                     }
                 }
                 if (tempNewList.isEmpty()) {
@@ -453,6 +471,12 @@ public class MarketPlaceActivity extends AppCompatActivity {
                 }
             }
 
+        }
+        Log.d("Hi","Hello");
+        if(aCategoryClearedList==true){
+            Toast.makeText(MarketPlaceActivity.this, "There are no items under these conditions.",
+                    Toast.LENGTH_LONG).show();
+            return copiedOverList;
         }
         if(tempNewList.isEmpty() && noFilterOptionClicked == false){
             Toast.makeText(MarketPlaceActivity.this, "There are no items under these conditions.",

@@ -170,11 +170,11 @@ public class FeatureFilterPopWindow extends AppCompatActivity implements OnItemS
                 break;
             case R.id.checkBoxL:
                 if (checked)
-                    checkM ="L";
+                    checkL ="L";
                 break;
             case R.id.checkBoxXL:
                 if (checked)
-                    checkM ="XL";
+                    checkXL ="XL";
                 else
                     break;
 
